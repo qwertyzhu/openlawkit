@@ -9,3 +9,5 @@ Thumbs.db
 eval-workspace/
 tmp/
 demo-output/
+~$*
+.playwright-cli/

@@ -16,7 +16,6 @@ class PublicSafetyTests(unittest.TestCase):
             "zhejiang tianran",
             "浙江天冉",
             ".hermes",
-            "qwertyzhu",
         }
         findings: list[str] = []
 

@@ -1,0 +1,39 @@
+{
+  "name": "openlawkit",
+  "version": "0.1.0",
+  "description": "Privacy-first, auditable PRC contract-review and legal-deadline workflows",
+  "author": {
+    "name": "qwertyzhu",
+    "url": "https://github.com/qwertyzhu"
+  },
+  "homepage": "https://github.com/qwertyzhu/openlawkit",
+  "repository": "https://github.com/qwertyzhu/openlawkit",
+  "license": "Apache-2.0",
+  "keywords": [
+    "legal-ai",
+    "contract-review",
+    "legal-deadlines",
+    "privacy-first"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "OpenLawKit",
+    "shortDescription": "Auditable PRC legal workflows for local documents.",
+    "longDescription": "Review Word contracts with native comments and extract evidence-linked PRC legal deadlines without silently changing source text or guessing missing trigger dates.",
+    "developerName": "qwertyzhu",
+    "category": "Productivity",
+    "capabilities": [
+      "Local file analysis",
+      "Microsoft Word comments",
+      "Legal deadline calculation"
+    ],
+    "websiteURL": "https://github.com/qwertyzhu/openlawkit",
+    "privacyPolicyURL": "https://github.com/qwertyzhu/openlawkit/blob/main/SECURITY.md",
+    "termsOfServiceURL": "https://github.com/qwertyzhu/openlawkit/blob/main/LICENSE",
+    "brandColor": "#0B6E69",
+    "defaultPrompt": [
+      "Review this Word contract with native comments only.",
+      "Extract and audit legal deadlines from this document."
+    ]
+  }
+}

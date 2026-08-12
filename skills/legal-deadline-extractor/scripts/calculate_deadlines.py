@@ -63,11 +63,13 @@ class HolidayCalendar:
         end = parse_date(data["coverage_end"], "coverage_end")
         if start > end:
             raise ValueError("Holiday calendar coverage_start is after coverage_end")
+        if not isinstance(data["complete"], bool):
+            raise ValueError("Holiday calendar complete must be a boolean")
         return cls(
             calendar_id=str(data["calendar_id"]),
             coverage_start=start,
             coverage_end=end,
-            complete=bool(data["complete"]),
+            complete=data["complete"],
             non_working_dates=frozenset(
                 parse_date(item, "non_working_dates[]")
                 for item in data["non_working_dates"]
@@ -430,8 +432,9 @@ def to_markdown(output: dict[str, Any]) -> str:
 
 
 def ics_escape(value: Any) -> str:
+    normalised = str(value if value is not None else "").replace("\r\n", "\n").replace("\r", "\n")
     return (
-        str(value if value is not None else "")
+        normalised
         .replace("\\", "\\\\")
         .replace(";", "\\;")
         .replace(",", "\\,")
