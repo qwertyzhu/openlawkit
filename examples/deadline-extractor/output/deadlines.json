@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "matter_id": "FICTIONAL-LABOR-001",
+  "source_document": {
+    "file_name": "fictional-labor-award.txt",
+    "document_type": "labor_arbitration_award",
+    "issuing_body": "云杉市劳动人事争议仲裁委员会（虚构）",
+    "case_number": "云劳人仲案〔2026〕虚构第0101号",
+    "is_fictional_example": true
+  },
+  "rule_pack_version": "2026-08-12.v1",
+  "rule_pack_verified_at": "2026-08-12",
+  "holiday_calendar": {
+    "calendar_id": "CN-national-2026-gov-office-2025-7",
+    "complete": true,
+    "coverage_start": "2026-01-01",
+    "coverage_end": "2026-12-31",
+    "source_url": "https://www.gov.cn/zhengce/zhengceku/202511/content_7047091.htm",
+    "verified_at": "2026-08-12"
+  },
+  "summary": {
+    "confirmed": 1,
+    "provisional": 0,
+    "needs_confirmation": 0
+  },
+  "results": [
+    {
+      "event_id": "employee-nonfinal-award-lawsuit",
+      "event_type": "labor_award_received",
+      "procedure_type": "labor_arbitration",
+      "participant_role": "employee",
+      "status": "confirmed",
+      "due_date": "2026-06-23",
+      "original_excerpt": "送达回证（虚构）：林小河于2026年6月8日签收本裁决书。",
+      "source_locator": {
+        "file_name": "fictional-labor-award.txt",
+        "location": "送达回证段落",
+        "page": null,
+        "paragraph": 9
+      },
+      "rule_id": "CN-LAB-ARBITRATION-NONFINAL-AWARD-LAWSUIT-15CD",
+      "rule_title": "非终局劳动仲裁裁决不服起诉期限",
+      "official_sources": [
+        {
+          "title": "中华人民共和国劳动争议调解仲裁法",
+          "article": "第五十条",
+          "url": "https://www.npc.gov.cn/npc/c2/c183/c198/201905/t20190522_28233.html"
+        },
+        {
+          "title": "劳动人事争议仲裁办案规则",
+          "article": "第八十条",
+          "url": "https://www.mohrss.gov.cn/wap/zc/zcwj/201705/t20170525_271415.html"
+        },
+        {
+          "title": "中华人民共和国民事诉讼法",
+          "article": "第八十五条",
+          "url": "https://www.npc.gov.cn/npc/c2/c30834/202401/P020240108541839745616.pdf"
+        }
+      ],
+      "confidence": "high",
+      "reason_codes": [],
+      "warnings": [],
+      "calculation": {
+        "trigger_date": "2026-06-08",
+        "duration_value": 15,
+        "duration_unit": "calendar_days",
+        "unadjusted_due_date": "2026-06-23",
+        "adjusted_due_date": "2026-06-23",
+        "calendar_id": "CN-national-2026-gov-office-2025-7"
+      }
+    }
+  ],
+  "disclaimer": "期限结果仅供人工复核；请核对原文、现行法、送达事实、节假日和具体程序类型。"
+}

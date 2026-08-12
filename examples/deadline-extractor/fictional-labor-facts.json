@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "matter_id": "FICTIONAL-LABOR-001",
+  "source_document": {
+    "file_name": "fictional-labor-award.txt",
+    "document_type": "labor_arbitration_award",
+    "issuing_body": "云杉市劳动人事争议仲裁委员会（虚构）",
+    "case_number": "云劳人仲案〔2026〕虚构第0101号",
+    "is_fictional_example": true
+  },
+  "events": [
+    {
+      "event_id": "employee-nonfinal-award-lawsuit",
+      "event_type": "labor_award_received",
+      "procedure_type": "labor_arbitration",
+      "participant_role": "employee",
+      "classifiers": {"award_type": "non_final"},
+      "trigger_date": "2026-06-08",
+      "trigger_date_status": "confirmed",
+      "original_excerpt": "送达回证（虚构）：林小河于2026年6月8日签收本裁决书。",
+      "source_locator": {
+        "file_name": "fictional-labor-award.txt",
+        "location": "送达回证段落",
+        "page": null,
+        "paragraph": 9
+      },
+      "rule_id": "CN-LAB-ARBITRATION-NONFINAL-AWARD-LAWSUIT-15CD",
+      "confidence": "high",
+      "notes": "裁决类型和劳动者实际签收日期均在虚构材料中明确。"
+    }
+  ]
+}

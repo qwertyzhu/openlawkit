@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "matter_id": "FICTIONAL-LABOR-MISSING-SERVICE",
+  "source_document": {
+    "file_name": "fictional-missing-service-date.txt",
+    "document_type": "labor_arbitration_award",
+    "issuing_body": "白桦市劳动人事争议仲裁委员会（虚构）",
+    "case_number": "白劳人仲案〔2026〕虚构第0202号",
+    "is_fictional_example": true
+  },
+  "events": [
+    {
+      "event_id": "employee-nonfinal-award-lawsuit-missing-service",
+      "event_type": "labor_award_received",
+      "procedure_type": "labor_arbitration",
+      "participant_role": "employee",
+      "classifiers": {"award_type": "non_final"},
+      "trigger_date": null,
+      "trigger_date_status": "missing",
+      "original_excerpt": "二〇二六年六月三日",
+      "source_locator": {
+        "file_name": "fictional-missing-service-date.txt",
+        "location": "文末落款日期；不是送达日期",
+        "page": null,
+        "paragraph": 7
+      },
+      "rule_id": "CN-LAB-ARBITRATION-NONFINAL-AWARD-LAWSUIT-15CD",
+      "confidence": "high",
+      "notes": "材料只能证明作出日期，不能证明劳动者收到裁决的日期。"
+    }
+  ]
+}

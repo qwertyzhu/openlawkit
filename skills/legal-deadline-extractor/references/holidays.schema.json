@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenLawKit optional holiday calendar",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["calendar_id", "coverage_start", "coverage_end", "complete", "non_working_dates", "working_weekend_dates"],
+  "properties": {
+    "calendar_id": {"type": "string", "minLength": 1},
+    "coverage_start": {"type": "string", "format": "date"},
+    "coverage_end": {"type": "string", "format": "date"},
+    "complete": {"type": "boolean"},
+    "non_working_dates": {
+      "type": "array",
+      "items": {"type": "string", "format": "date"},
+      "uniqueItems": true
+    },
+    "working_weekend_dates": {
+      "type": "array",
+      "items": {"type": "string", "format": "date"},
+      "uniqueItems": true
+    },
+    "source_url": {"type": ["string", "null"], "format": "uri"},
+    "verified_at": {"type": ["string", "null"], "format": "date"}
+  }
+}

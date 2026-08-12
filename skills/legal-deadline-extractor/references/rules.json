@@ -1,0 +1,152 @@
+{
+  "rule_pack_version": "2026-08-12.v1",
+  "jurisdiction": "CN",
+  "verified_at": "2026-08-12",
+  "scope_note": "Public v0.1 contains only narrow national-level rules verified against the linked official text. Local rules, special procedures, suspension, interruption, and service disputes remain outside automatic determination.",
+  "rules": [
+    {
+      "rule_id": "CN-LAB-ARBITRATION-NONFINAL-AWARD-LAWSUIT-15CD",
+      "title": "非终局劳动仲裁裁决不服起诉期限",
+      "procedure_type": "labor_arbitration",
+      "event_type": "labor_award_received",
+      "conditions": {
+        "participant_role": {"one_of": ["employee", "employer"]},
+        "classifiers.award_type": {"equals": "non_final"}
+      },
+      "duration": {"value": 15, "unit": "calendar_days"},
+      "calculation": {"exclude_trigger_day": true, "roll_forward_if_nonworking": true},
+      "requires_review": false,
+      "review_reason": null,
+      "verification": {"status": "verified", "verified_at": "2026-08-12"},
+      "official_sources": [
+        {
+          "title": "中华人民共和国劳动争议调解仲裁法",
+          "article": "第五十条",
+          "url": "https://www.npc.gov.cn/npc/c2/c183/c198/201905/t20190522_28233.html"
+        },
+        {
+          "title": "劳动人事争议仲裁办案规则",
+          "article": "第八十条",
+          "url": "https://www.mohrss.gov.cn/wap/zc/zcwj/201705/t20170525_271415.html"
+        },
+        {
+          "title": "中华人民共和国民事诉讼法",
+          "article": "第八十五条",
+          "url": "https://www.npc.gov.cn/npc/c2/c30834/202401/P020240108541839745616.pdf"
+        }
+      ]
+    },
+    {
+      "rule_id": "CN-LAB-ARBITRATION-FINAL-AWARD-EMPLOYEE-LAWSUIT-15CD",
+      "title": "终局劳动仲裁裁决劳动者起诉期限",
+      "procedure_type": "labor_arbitration",
+      "event_type": "labor_award_received",
+      "conditions": {
+        "participant_role": {"equals": "employee"},
+        "classifiers.award_type": {"equals": "final"}
+      },
+      "duration": {"value": 15, "unit": "calendar_days"},
+      "calculation": {"exclude_trigger_day": true, "roll_forward_if_nonworking": true},
+      "requires_review": false,
+      "review_reason": null,
+      "verification": {"status": "verified", "verified_at": "2026-08-12"},
+      "official_sources": [
+        {
+          "title": "中华人民共和国劳动争议调解仲裁法",
+          "article": "第四十七条、第四十八条",
+          "url": "https://www.npc.gov.cn/npc/c2/c183/c198/201905/t20190522_28233.html"
+        },
+        {
+          "title": "劳动人事争议仲裁办案规则",
+          "article": "第八十条",
+          "url": "https://www.mohrss.gov.cn/wap/zc/zcwj/201705/t20170525_271415.html"
+        },
+        {
+          "title": "中华人民共和国民事诉讼法",
+          "article": "第八十五条",
+          "url": "https://www.npc.gov.cn/npc/c2/c30834/202401/P020240108541839745616.pdf"
+        }
+      ]
+    },
+    {
+      "rule_id": "CN-LAB-ARBITRATION-FINAL-AWARD-EMPLOYER-SETASIDE-30CD",
+      "title": "终局劳动仲裁裁决用人单位申请撤销期限",
+      "procedure_type": "labor_arbitration",
+      "event_type": "labor_award_received",
+      "conditions": {
+        "participant_role": {"equals": "employer"},
+        "classifiers.award_type": {"equals": "final"},
+        "classifiers.remedy": {"equals": "set_aside"}
+      },
+      "duration": {"value": 30, "unit": "calendar_days"},
+      "calculation": {"exclude_trigger_day": true, "roll_forward_if_nonworking": true},
+      "requires_review": true,
+      "review_reason": "只有符合法定撤销事由且向有管辖权的中级人民法院申请时才适用；本工具不判断撤销事由或管辖。",
+      "verification": {"status": "verified", "verified_at": "2026-08-12"},
+      "official_sources": [
+        {
+          "title": "中华人民共和国劳动争议调解仲裁法",
+          "article": "第四十七条、第四十九条",
+          "url": "https://www.npc.gov.cn/npc/c2/c183/c198/201905/t20190522_28233.html"
+        },
+        {
+          "title": "劳动人事争议仲裁办案规则",
+          "article": "第八十条",
+          "url": "https://www.mohrss.gov.cn/wap/zc/zcwj/201705/t20170525_271415.html"
+        },
+        {
+          "title": "中华人民共和国民事诉讼法",
+          "article": "第八十五条",
+          "url": "https://www.npc.gov.cn/npc/c2/c30834/202401/P020240108541839745616.pdf"
+        }
+      ]
+    },
+    {
+      "rule_id": "CN-LAB-ARBITRATION-RESPONDENT-DEFENSE-10WD",
+      "title": "劳动仲裁被申请人答辩期限",
+      "procedure_type": "labor_arbitration",
+      "event_type": "arbitration_application_copy_received",
+      "conditions": {
+        "participant_role": {"equals": "respondent"}
+      },
+      "duration": {"value": 10, "unit": "working_days"},
+      "calculation": {"exclude_trigger_day": true, "roll_forward_if_nonworking": false},
+      "requires_review": false,
+      "review_reason": null,
+      "verification": {"status": "verified", "verified_at": "2026-08-12"},
+      "official_sources": [
+        {
+          "title": "中华人民共和国劳动争议调解仲裁法",
+          "article": "第三十条",
+          "url": "https://www.npc.gov.cn/npc/c2/c183/c198/201905/t20190522_28233.html"
+        },
+        {
+          "title": "劳动人事争议仲裁办案规则",
+          "article": "第八十条",
+          "url": "https://www.mohrss.gov.cn/wap/zc/zcwj/201705/t20170525_271415.html"
+        }
+      ]
+    },
+    {
+      "rule_id": "CN-CIVIL-ENFORCEMENT-APPLICATION-2Y",
+      "title": "申请执行期间",
+      "procedure_type": "civil_enforcement",
+      "event_type": "enforcement_limitation_trigger",
+      "conditions": {
+        "classifiers.trigger_basis": {"one_of": ["performance_period_last_day", "installment_plan_last_day", "legal_instrument_effective_date"]}
+      },
+      "duration": {"value": 2, "unit": "years"},
+      "calculation": {"exclude_trigger_day": true, "roll_forward_if_nonworking": true},
+      "requires_review": true,
+      "review_reason": "申请执行期间可能发生中止或中断；分期履行依现行法从最后一期履行期限届满之日起计算。这里仅给出未发生中止、中断时的机械基准日。",
+      "verification": {"status": "verified", "verified_at": "2026-08-12"},
+      "official_sources": [
+        {
+          "title": "中华人民共和国民事诉讼法",
+          "article": "第二百五十条",
+          "url": "https://www.npc.gov.cn/npc/c2/c30834/202401/P020240108541839745616.pdf"
+        }
+      ]
+    }
+  ]
+}

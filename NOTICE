@@ -1,0 +1,13 @@
+OpenLawKit
+Copyright 2026 OpenLawKit contributors
+
+The contract-review methodology is adapted from the JiCheng contract-review
+skill distributed by Yuanli under the Apache License 2.0:
+https://yuanli.ailaw.cn/api/skills/jicheng-contract-review/download
+Source package SHA-256:
+7af9cc784928813d3d6194353ca7f1b417ed59f78f0165dc790ad0bc7e38fd16
+
+No source files from the separately distributed du-execution-manager or
+du-labor-arbitration-manager packages are included. OpenLawKit's deadline rule
+pack and implementation are independently written from official public legal
+sources.

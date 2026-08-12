@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "matter_id": "FICTIONAL-ENFORCEMENT-001",
+  "source_document": {
+    "file_name": "fictional-civil-judgment.txt",
+    "document_type": "civil_judgment_with_effectiveness_certificate",
+    "issuing_body": "松林市青禾区人民法院（虚构）",
+    "case_number": "（2026）虚0101民初101号",
+    "is_fictional_example": true
+  },
+  "events": [
+    {
+      "event_id": "apply-for-enforcement",
+      "event_type": "enforcement_limitation_trigger",
+      "procedure_type": "civil_enforcement",
+      "participant_role": "enforcement_applicant",
+      "classifiers": {"trigger_basis": "performance_period_last_day"},
+      "trigger_date": "2026-07-31",
+      "trigger_date_status": "confirmed",
+      "original_excerpt": "被告应于本判决生效之日起十日内支付；履行期间最后一日经生效证明复核为2026年7月31日。",
+      "source_locator": {
+        "file_name": "fictional-civil-judgment.txt",
+        "location": "判决主文与生效证明人工复核记录",
+        "page": null,
+        "paragraph": null
+      },
+      "rule_id": "CN-CIVIL-ENFORCEMENT-APPLICATION-2Y",
+      "confidence": "high",
+      "notes": "尚未核查申请执行期间是否发生中止或中断。"
+    }
+  ]
+}

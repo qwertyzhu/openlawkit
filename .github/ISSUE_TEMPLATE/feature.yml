@@ -1,0 +1,30 @@
+name: Rule or feature request
+description: Propose a narrowly testable workflow or rule update
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Describe the user decision or work product, not only a desired model behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Official primary source
+      description: Required for legal-rule proposals. Include the URL, article, effective date, and verification date.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Verifiable acceptance criteria
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I confirm that this request contains no real client or case data.
+          required: true

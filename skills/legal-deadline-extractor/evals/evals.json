@@ -1,0 +1,29 @@
+{
+  "skill_name": "legal-deadline-extractor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请处理 examples/deadline-extractor/fictional-labor-award.txt：提取劳动者不服非终局裁决的起诉期限，保留原文与位置，使用 2026 官方节假日表，输出 JSON、Markdown 和 ICS。只处理虚构材料。",
+      "expected_output": "输出三种格式；期限为 2026-06-23；结果含 original_excerpt、source_locator、rule_id 和 confidence。",
+      "files": ["../../examples/deadline-extractor/fictional-labor-award.txt"],
+      "expectations": [
+        "输出 deadlines.json、deadlines.md 和 deadlines.ics，三者均非空且事项一致",
+        "精确保留送达回证原文与可复现 source_locator，不把裁决落款日当送达日",
+        "匹配非终局劳动仲裁裁决的 15 个自然日规则，due_date 为 2026-06-23 且 status 为 confirmed",
+        "使用完整的 2026 官方调休日历，JSON、Markdown 与 ICS 日期一致，ICS 含 DTSTART;VALUE=DATE:20260623"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "请从 examples/deadline-extractor/fictional-missing-service-date.txt 计算劳动者的起诉截止日。注意文件有作出日期但没有送达回证。输出审计结果。",
+      "expected_output": "不得把 2026-06-03 当作送达日；结果为 needs_confirmation 且 due_date 为 null，并明确需要实际签收/送达证据。",
+      "files": ["../../examples/deadline-extractor/fictional-missing-service-date.txt"],
+      "expectations": [
+        "明确区分裁决作出日期与实际送达或签收日期",
+        "结果 status 为 needs_confirmation 且 due_date 为 null",
+        "保留缺失送达事实的原文依据和位置，并提示补充送达回证或签收证据",
+        "ICS 不创建含猜测日期的 VEVENT"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "skill_name": "contract-comment-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "请从甲方立场标准审查这份完全虚构的信息技术服务合同。不要改正文，只在冲突或高风险条款的最短准确原文上添加 Word 原生批注；每条批注写问题类型、风险原因和修订建议，最后验证正文文本未变化。",
+      "expected_output": "输出带原生 Word 批注的 DOCX、findings JSON 和验证报告；正文段落文本及哈希与输入一致，示例中的价款冲突、知识产权归属、责任限制和仲裁机构不明等风险被准确锚定。",
+      "files": ["../../examples/contract-review/fictional-service-contract.docx"],
+      "expectations": [
+        "明确采用甲方立场且不编造未提供事实",
+        "所有批注均包含三个规定字段并以 author 编码风险等级",
+        "每个批注范围等于 findings 中的精确 anchor_text",
+        "验证正文段落文本和文本哈希均未改变"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "给这份服务合同加批注审查，但我还没说我们代表甲方还是乙方。先处理一下，别替我改合同。",
+      "expected_output": "先询问或明确要求补充代表方；若用户坚持继续，只能清楚声明有限假设后给出条件化意见，不把立场当成已知事实，且不修改正文。",
+      "files": ["../../examples/contract-review/fictional-service-contract.docx"],
+      "expectations": [
+        "识别代表方缺失会实质改变风险判断",
+        "不直接输出伪装成确定结论的最终审查",
+        "不修改合同正文"
+      ]
+    }
+  ]
+}

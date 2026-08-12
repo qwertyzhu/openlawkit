@@ -1,0 +1,56 @@
+{
+  "status": "ok",
+  "input": "examples\\contract-review\\fictional-service-contract.docx",
+  "output": "examples\\contract-review\\fictional-service-contract-reviewed.docx",
+  "findings": "examples\\contract-review\\fictional-findings.json",
+  "checks": {
+    "docx_zip_integrity": true,
+    "main_body_paragraphs_identical": true,
+    "main_body_text_hash_identical": true,
+    "comments_xml_present": true,
+    "comments_relationship_valid": true,
+    "comments_content_type_valid": true,
+    "comment_markers_complete": true,
+    "exact_anchors_verified": true
+  },
+  "body_text_sha256": "74633e6f652dfcefd2d3b4df47695fa6016ca99ebff4fe7cf090ce79618dfe0b",
+  "paragraph_count": 16,
+  "new_comment_count": 5,
+  "comments": [
+    {
+      "finding_id": "C-001",
+      "comment_id": "0",
+      "author": "OpenLawKit-High",
+      "paragraph_number": 7,
+      "anchor_text": "服务费总额为人民币壹拾万元整（¥100,000.00）。乙方开具发票后，甲方支付人民币壹拾贰万元整（¥120,000.00）"
+    },
+    {
+      "finding_id": "C-002",
+      "comment_id": "1",
+      "author": "OpenLawKit-Medium",
+      "paragraph_number": 8,
+      "anchor_text": "甲方未在两个自然日内提出异议的，视为验收合格"
+    },
+    {
+      "finding_id": "C-003",
+      "comment_id": "2",
+      "author": "OpenLawKit-High",
+      "paragraph_number": 9,
+      "anchor_text": "项目成果及相关知识产权均归乙方所有"
+    },
+    {
+      "finding_id": "C-004",
+      "comment_id": "3",
+      "author": "OpenLawKit-High",
+      "paragraph_number": 11,
+      "anchor_text": "全部责任，以甲方最近一期已支付服务费的百分之十为上限"
+    },
+    {
+      "finding_id": "C-005",
+      "comment_id": "4",
+      "author": "OpenLawKit-High",
+      "paragraph_number": 13,
+      "anchor_text": "提交当地仲裁委员会仲裁"
+    }
+  ]
+}
