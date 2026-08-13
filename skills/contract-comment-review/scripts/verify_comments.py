@@ -24,8 +24,10 @@ from add_comments import (
     CommentWriterError,
     canonical_body_text,
     comment_lines,
+    comments_relationship_target,
     load_findings,
     paragraph_text,
+    _plan_comments,
 )
 
 
@@ -79,27 +81,34 @@ def _marker_ids(document_root: etree._Element, local_name: str) -> list[str]:
     ]
 
 
-def _anchored_text(document_root: etree._Element, comment_id: str) -> tuple[str, int]:
-    found: list[tuple[str, int]] = []
+def _anchored_text(
+    document_root: etree._Element, comment_id: str
+) -> tuple[str, int, int]:
+    found: list[tuple[str, int, int]] = []
     paragraphs = document_root.xpath("/w:document/w:body/w:p", namespaces=NS)
     for paragraph_number, paragraph in enumerate(paragraphs, start=1):
         active = False
         pieces: list[str] = []
+        cursor = 0
+        range_start = 0
         for child in paragraph:
             if child.tag == _qn("commentRangeStart") and child.get(_qn("id")) == comment_id:
                 if active:
                     raise CommentWriterError(f"comment {comment_id} has nested duplicate starts")
                 active = True
+                range_start = cursor
                 continue
             if child.tag == _qn("commentRangeEnd") and child.get(_qn("id")) == comment_id:
                 if not active:
                     continue
-                found.append(("".join(pieces), paragraph_number))
+                found.append(("".join(pieces), paragraph_number, range_start))
                 active = False
                 pieces = []
                 continue
+            child_text = child.xpath(".//w:t/text()", namespaces=NS)
             if active:
-                pieces.extend(child.xpath(".//w:t/text()", namespaces=NS))
+                pieces.extend(child_text)
+            cursor += sum(len(piece) for piece in child_text)
         if active:
             raise CommentWriterError(f"comment {comment_id} range crosses a paragraph boundary")
     if len(found) != 1:
@@ -131,24 +140,28 @@ def verify(input_path: Path, output_path: Path, findings_path: Path) -> dict[str
 
     input_document = _parse(input_package["word/document.xml"], "input word/document.xml")
     output_document = _parse(output_package["word/document.xml"], "output word/document.xml")
-    input_paragraphs = [
+    expected_plans = {
+        plan.finding["finding_id"]: plan
+        for plan in _plan_comments(input_document, findings, first_comment_id=0)
+    }
+    input_top_level_paragraphs = [
         paragraph_text(p)
         for p in input_document.xpath("/w:document/w:body/w:p", namespaces=NS)
     ]
-    output_paragraphs = [
+    output_top_level_paragraphs = [
         paragraph_text(p)
         for p in output_document.xpath("/w:document/w:body/w:p", namespaces=NS)
     ]
-    if input_paragraphs != output_paragraphs:
+    if input_top_level_paragraphs != output_top_level_paragraphs:
         mismatch = next(
             (
                 index
                 for index, (before, after) in enumerate(
-                    zip(input_paragraphs, output_paragraphs), start=1
+                    zip(input_top_level_paragraphs, output_top_level_paragraphs), start=1
                 )
                 if before != after
             ),
-            min(len(input_paragraphs), len(output_paragraphs)) + 1,
+            min(len(input_top_level_paragraphs), len(output_top_level_paragraphs)) + 1,
         )
         raise CommentWriterError(
             f"main-body paragraph text changed (first mismatch at paragraph {mismatch})"
@@ -187,9 +200,14 @@ def verify(input_path: Path, output_path: Path, findings_path: Path) -> dict[str
         raise CommentWriterError(
             f"expected one comments relationship; found {len(comment_relationships)}"
         )
-    target = comment_relationships[0].get("Target", "").replace("\\", "/")
-    if target.split("/")[-1] != "comments.xml":
-        raise CommentWriterError(f"comments relationship points to an unexpected target: {target}")
+    target = comment_relationships[0].get("Target", "")
+    resolved_target = comments_relationship_target(
+        target, comment_relationships[0].get("TargetMode")
+    )
+    if resolved_target not in output_package:
+        raise CommentWriterError(
+            f"comments relationship target is missing from the package: {resolved_target}"
+        )
 
     content_types = _parse(output_package["[Content_Types].xml"], "output [Content_Types].xml")
     overrides = content_types.xpath(
@@ -216,12 +234,25 @@ def verify(input_path: Path, output_path: Path, findings_path: Path) -> dict[str
             and comment.get(_qn("initials")) == expected_initials
             and _comment_text(comment) == expected_lines
         ]
-        if len(candidates) != 1:
+        expected_plan = expected_plans[finding["finding_id"]]
+        anchored_candidates: list[tuple[etree._Element, int, int]] = []
+        for candidate in candidates:
+            candidate_id = candidate.get(_qn("id"), "")
+            anchor, paragraph_number, anchor_start = _anchored_text(
+                output_document, candidate_id
+            )
+            if (
+                anchor == finding["anchor_text"]
+                and paragraph_number == expected_plan.paragraph_number
+                and anchor_start == expected_plan.start
+            ):
+                anchored_candidates.append((candidate, paragraph_number, anchor_start))
+        if len(anchored_candidates) != 1:
             raise CommentWriterError(
                 f"{finding['finding_id']}: expected exactly one structured comment; "
-                f"found {len(candidates)}"
+                f"found {len(anchored_candidates)} at the expected anchor"
             )
-        comment = candidates[0]
+        comment, paragraph_number, anchor_start = anchored_candidates[0]
         comment_id = comment.get(_qn("id"), "")
         unused_new_ids.remove(comment_id)
         for label, values in (
@@ -234,12 +265,12 @@ def verify(input_path: Path, output_path: Path, findings_path: Path) -> dict[str
                 raise CommentWriterError(
                     f"{finding['finding_id']}: comment {comment_id} has {count} {label} markers"
                 )
-        anchor, paragraph_number = _anchored_text(output_document, comment_id)
+        anchor, _, _ = _anchored_text(output_document, comment_id)
         if anchor != finding["anchor_text"]:
             raise CommentWriterError(
                 f"{finding['finding_id']}: anchored text mismatch: {anchor!r}"
             )
-        if output_paragraphs[paragraph_number - 1] != finding["paragraph_text"]:
+        if output_top_level_paragraphs[paragraph_number - 1] != finding["paragraph_text"]:
             raise CommentWriterError(
                 f"{finding['finding_id']}: comment is anchored in the wrong paragraph"
             )
@@ -249,6 +280,7 @@ def verify(input_path: Path, output_path: Path, findings_path: Path) -> dict[str
                 "comment_id": comment_id,
                 "author": expected_author,
                 "paragraph_number": paragraph_number,
+                "anchor_start": anchor_start,
                 "anchor_text": anchor,
             }
         )
@@ -272,7 +304,7 @@ def verify(input_path: Path, output_path: Path, findings_path: Path) -> dict[str
             "exact_anchors_verified": True,
         },
         "body_text_sha256": input_hash,
-        "paragraph_count": len(input_paragraphs),
+        "paragraph_count": len(input_top_level_paragraphs),
         "new_comment_count": len(new_ids),
         "comments": verified_comments,
     }

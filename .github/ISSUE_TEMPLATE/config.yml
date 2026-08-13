@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/qwertyzhu/openlawkit/discussions
+    about: Ask usage questions and discuss ideas without sharing live legal materials.
+  - name: Private security report
+    url: https://github.com/qwertyzhu/openlawkit/security/advisories/new
+    about: Report vulnerabilities or accidental disclosure privately.

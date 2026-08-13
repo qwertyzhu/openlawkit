@@ -108,6 +108,18 @@ class DeadlineExtractorTests(unittest.TestCase):
         self.assertEqual("confirmed", result["status"])
         self.assertEqual("2026-03-02", result["due_date"])
 
+        rule = next(
+            item
+            for item in self.rules["rules"]
+            if item["rule_id"] == "CN-LAB-ARBITRATION-RESPONDENT-DEFENSE-10WD"
+        )
+        procedural_source = next(
+            item
+            for item in rule["official_sources"]
+            if item["title"] == "劳动人事争议仲裁办案规则"
+        )
+        self.assertEqual("第三十三条、第八十条", procedural_source["article"])
+
     def test_missing_holiday_calendar_makes_date_provisional(self) -> None:
         facts = calculator.load_json(EXAMPLES / "fictional-labor-facts.json")
         output = calculator.calculate_all(facts, self.rules, None)
@@ -177,6 +189,24 @@ class DeadlineExtractorTests(unittest.TestCase):
         self.assertTrue(all(line.startswith(" ") for line in folded[1:]))
         unfolded = folded[0] + "".join(line[1:] for line in folded[1:])
         self.assertEqual(source, unfolded)
+
+    def test_ics_escape_normalises_cr_and_lf_without_property_injection(self) -> None:
+        value = "original\rATTENDEE:mailto:attacker@example.test\r\nnext\nlast"
+        escaped = calculator.ics_escape(value)
+
+        self.assertNotIn("\r", escaped)
+        self.assertNotIn("\n", escaped)
+        self.assertEqual(
+            "original\\nATTENDEE:mailto:attacker@example.test\\nnext\\nlast",
+            escaped,
+        )
+
+    def test_holiday_complete_must_be_a_json_boolean(self) -> None:
+        data = calculator.load_json(HOLIDAYS)
+        data["complete"] = "false"
+
+        with self.assertRaisesRegex(ValueError, "complete must be a boolean"):
+            calculator.HolidayCalendar.from_json(data)
 
 
 if __name__ == "__main__":

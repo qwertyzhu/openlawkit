@@ -18,6 +18,7 @@ import zipfile
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from posixpath import normpath
 from typing import Any
 
 from lxml import etree
@@ -71,8 +72,29 @@ def paragraph_text(paragraph: etree._Element) -> str:
 
 
 def canonical_body_text(document_root: etree._Element) -> str:
-    paragraphs = document_root.xpath("/w:document/w:body/w:p", namespaces=NS)
+    paragraphs = document_root.xpath("/w:document/w:body//w:p", namespaces=NS)
     return "\n".join(paragraph_text(p) for p in paragraphs)
+
+
+def comments_relationship_target(
+    raw_target: str, target_mode: str | None = None
+) -> str:
+    """Resolve a document relationship target to its canonical package part."""
+    if target_mode not in {None, "Internal"}:
+        raise CommentWriterError(
+            "existing comments relationship must be an internal package relationship"
+        )
+    target = raw_target.replace("\\", "/")
+    if not target or target.startswith("/"):
+        raise CommentWriterError(
+            f"existing comments relationship uses unsupported target: {raw_target}"
+        )
+    resolved = normpath(f"word/{target}")
+    if resolved != "word/comments.xml":
+        raise CommentWriterError(
+            f"existing comments relationship uses unsupported target: {raw_target}"
+        )
+    return resolved
 
 
 def _positive_int(value: Any, field: str, finding_id: str) -> int:
@@ -426,10 +448,7 @@ def _ensure_comments_relationship(rels_root: etree._Element) -> None:
     )
     if existing:
         target = existing[0].get("Target", "")
-        if target.replace("\\", "/").split("/")[-1] != "comments.xml":
-            raise CommentWriterError(
-                f"existing comments relationship uses unsupported target: {target}"
-            )
+        comments_relationship_target(target, existing[0].get("TargetMode"))
         return
     numeric_ids: list[int] = []
     all_ids = {node.get("Id", "") for node in rels_root}

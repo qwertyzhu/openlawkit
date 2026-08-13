@@ -1,0 +1,7 @@
+interface:
+  display_name: "Legal Deadline Extractor"
+  short_description: "Extract evidence-linked PRC legal deadlines."
+  brand_color: "#0B6E69"
+  default_prompt: "Extract auditable legal deadlines from this document. Preserve the trigger text and do not guess any missing date."
+policy:
+  allow_implicit_invocation: true

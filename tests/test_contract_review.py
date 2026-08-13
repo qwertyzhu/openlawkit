@@ -11,6 +11,7 @@ import zipfile
 from pathlib import Path
 
 from lxml import etree
+from docx import Document
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -160,6 +161,115 @@ class ContractCommentReviewTests(unittest.TestCase):
         result = run_cli(VERIFY_COMMENTS, self.input_docx, tampered, FINDINGS)
         self.assertEqual(result.returncode, 2)
         self.assertIn("paragraph text changed", result.stderr)
+
+    def test_verifier_detects_table_text_tampering(self) -> None:
+        source = self.work / "table-input.docx"
+        document = Document()
+        document.add_paragraph("Anchor paragraph")
+        document.add_table(rows=1, cols=1).cell(0, 0).text = "ORIGINAL TABLE TERM"
+        document.save(source)
+        findings = self.work / "table-findings.json"
+        findings.write_text(
+            json.dumps(
+                {
+                    "language": "en",
+                    "findings": [
+                        {
+                            "finding_id": "TABLE-1",
+                            "paragraph_text": "Anchor paragraph",
+                            "anchor_text": "Anchor",
+                            "risk": "High",
+                            "issue_type": "Scope",
+                            "risk_reason": "The term is unclear.",
+                            "revision_suggestion": "Clarify the term.",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        reviewed = self.work / "table-reviewed.docx"
+        added = run_cli(ADD_COMMENTS, source, findings, "-o", reviewed)
+        self.assertEqual(added.returncode, 0, added.stderr)
+
+        tampered = self.work / "table-tampered.docx"
+        with zipfile.ZipFile(reviewed, "r") as package:
+            infos = package.infolist()
+            payloads = {info.filename: package.read(info.filename) for info in infos}
+        payloads["word/document.xml"] = payloads["word/document.xml"].replace(
+            b"ORIGINAL TABLE TERM", b"ALTERED  TABLE TERM", 1
+        )
+        with zipfile.ZipFile(tampered, "w") as package:
+            for info in infos:
+                package.writestr(info, payloads[info.filename])
+
+        result = run_cli(VERIFY_COMMENTS, source, tampered, findings)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("canonical main-body text hash changed", result.stderr)
+
+    def test_identical_comment_texts_are_matched_by_anchor(self) -> None:
+        data = json.loads(FINDINGS.read_text(encoding="utf-8"))
+        first, second = data["findings"][:2]
+        for field in ("risk", "issue_type", "risk_reason", "revision_suggestion"):
+            second[field] = first[field]
+        data["findings"] = [first, second]
+        findings = self.work / "identical-comments.json"
+        findings.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+        reviewed = self.work / "identical-comments.docx"
+
+        added = run_cli(ADD_COMMENTS, self.input_docx, findings, "-o", reviewed)
+        self.assertEqual(added.returncode, 0, added.stderr)
+        verified = run_cli(VERIFY_COMMENTS, self.input_docx, reviewed, findings)
+        self.assertEqual(verified.returncode, 0, verified.stderr)
+
+    def test_identical_comments_on_repeated_anchors_in_one_paragraph(self) -> None:
+        source = self.work / "repeated-anchor-input.docx"
+        document = Document()
+        document.add_paragraph("repeat term and repeat term")
+        document.save(source)
+        common = {
+            "paragraph_text": "repeat term and repeat term",
+            "anchor_text": "repeat",
+            "risk": "Medium",
+            "issue_type": "Repeated term",
+            "risk_reason": "The repeated term requires review.",
+            "revision_suggestion": "Clarify this occurrence.",
+        }
+        findings_data = {
+            "language": "en",
+            "findings": [
+                {"finding_id": "REPEAT-1", "anchor_occurrence": 1, **common},
+                {"finding_id": "REPEAT-2", "anchor_occurrence": 2, **common},
+            ],
+        }
+        findings = self.work / "repeated-anchor-findings.json"
+        findings.write_text(json.dumps(findings_data), encoding="utf-8")
+        reviewed = self.work / "repeated-anchor-reviewed.docx"
+
+        added = run_cli(ADD_COMMENTS, source, findings, "-o", reviewed)
+        self.assertEqual(added.returncode, 0, added.stderr)
+        verified = run_cli(VERIFY_COMMENTS, source, reviewed, findings)
+        self.assertEqual(verified.returncode, 0, verified.stderr)
+
+    def test_noncanonical_comments_relationship_is_rejected(self) -> None:
+        reviewed = self.work / "reviewed.docx"
+        added = run_cli(ADD_COMMENTS, self.input_docx, FINDINGS, "-o", reviewed)
+        self.assertEqual(added.returncode, 0, added.stderr)
+        malformed = self.work / "wrong-relationship.docx"
+        with zipfile.ZipFile(reviewed, "r") as package:
+            infos = package.infolist()
+            payloads = {info.filename: package.read(info.filename) for info in infos}
+        relationship = "word/_rels/document.xml.rels"
+        payloads[relationship] = payloads[relationship].replace(
+            b'Target="comments.xml"', b'Target="evil/comments.xml"', 1
+        )
+        with zipfile.ZipFile(malformed, "w") as package:
+            for info in infos:
+                package.writestr(info, payloads[info.filename])
+
+        result = run_cli(VERIFY_COMMENTS, self.input_docx, malformed, FINDINGS)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("unsupported target", result.stderr)
 
 
 if __name__ == "__main__":

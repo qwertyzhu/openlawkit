@@ -6,7 +6,7 @@ Only the latest tagged release receives security fixes during the early preview.
 
 ## Reporting a vulnerability
 
-Please use GitHub private vulnerability reporting when it is enabled. Do not put real contracts, case files, client identities, credentials, internal paths, or confidential excerpts in a public issue.
+Please use [GitHub private vulnerability reporting](https://github.com/qwertyzhu/openlawkit/security/advisories/new). Do not put real contracts, case files, client identities, credentials, internal paths, or confidential excerpts in a public issue.
 
 Provide the smallest fictional or redacted reproduction possible. If a report concerns accidental disclosure, state what data class was exposed and where, but do not repeat the sensitive content.
 

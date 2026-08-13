@@ -4,4 +4,4 @@ OpenLawKit is a professional, evidence-oriented project. Be respectful, discuss 
 
 Harassment, threats, discriminatory language, doxxing, or the publication of confidential legal materials are not accepted. Maintainers may edit, hide, or remove content and restrict participation when needed to protect the community or affected people.
 
-When reporting conduct concerns, use a private channel provided by the repository owner. Do not post sensitive details publicly.
+When reporting conduct concerns that also create a security or disclosure risk, use [GitHub private vulnerability reporting](https://github.com/qwertyzhu/openlawkit/security/advisories/new). Do not post sensitive details publicly.
