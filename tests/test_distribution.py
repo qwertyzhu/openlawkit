@@ -58,6 +58,21 @@ def test_demo_clean_refuses_symlink_without_deleting_target(tmp_path: Path) -> N
     assert sentinel.read_text(encoding="utf-8") == "keep"
 
 
+def test_demo_clean_falls_back_when_is_mount_is_missing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    selected = tmp_path / "demo-output"
+    selected.mkdir()
+    sentinel = selected / "must-survive.txt"
+    sentinel.write_text("keep", encoding="utf-8")
+
+    monkeypatch.delattr(Path, "is_mount", raising=False)
+
+    run_demo.clean_demo_output(selected, selected)
+
+    assert not selected.exists()
+
+
 def test_demo_clean_refuses_any_other_lexical_directory(tmp_path: Path) -> None:
     selected = tmp_path / "outside"
     selected.mkdir()
