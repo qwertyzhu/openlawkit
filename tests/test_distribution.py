@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 from pathlib import Path
 import sys
-import tomllib
 from unittest import mock
 
 import pytest
@@ -19,13 +19,19 @@ sys.modules[SPEC.name] = run_demo
 SPEC.loader.exec_module(run_demo)
 
 
+def _pyproject_version() -> str:
+    text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    match = re.search(r'(?m)^version\s*=\s*"([^"]+)"', text)
+    assert match is not None, "pyproject.toml missing project version"
+    return match.group(1)
+
+
 def test_plugin_manifest_points_to_real_components() -> None:
     manifest_path = ROOT / ".codex-plugin" / "plugin.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
     assert manifest["name"] == "openlawkit"
-    project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
-    assert manifest["version"] == project["project"]["version"]
+    assert manifest["version"] == _pyproject_version()
     skills_path = (ROOT / manifest["skills"]).resolve()
     assert skills_path == (ROOT / "skills").resolve()
     assert (skills_path / "contract-comment-review" / "SKILL.md").is_file()
@@ -67,6 +73,23 @@ def test_demo_clean_falls_back_when_is_mount_is_missing(
     sentinel.write_text("keep", encoding="utf-8")
 
     monkeypatch.delattr(Path, "is_mount", raising=False)
+
+    run_demo.clean_demo_output(selected, selected)
+
+    assert not selected.exists()
+
+
+def test_demo_clean_falls_back_when_is_mount_raises(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    selected = tmp_path / "demo-output"
+    selected.mkdir()
+    (selected / "must-survive.txt").write_text("keep", encoding="utf-8")
+
+    def boom(self: Path) -> bool:
+        raise NotImplementedError("Path.is_mount() is unsupported on this system")
+
+    monkeypatch.setattr(Path, "is_mount", boom, raising=False)
 
     run_demo.clean_demo_output(selected, selected)
 

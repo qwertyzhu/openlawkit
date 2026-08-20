@@ -29,11 +29,17 @@ def clean_demo_output(output_dir: Path, expected_output: Path) -> None:
     if output_dir != expected_output:
         raise ValueError("--clean is limited to the repository demo-output directory")
     is_junction = getattr(output_dir, "is_junction", lambda: False)
-    # Path.is_mount() only exists on Python 3.12+; fall back to os.path.ismount
-    # so the guard still works on the supported 3.10/3.11 runtimes.
-    is_mount = getattr(
-        output_dir, "is_mount", lambda: os.path.ismount(os.fspath(output_dir))
-    )
+    # Path.is_mount: missing on some 3.10 builds; on Windows 3.11 it exists but
+    # raises NotImplementedError. Always fall back to os.path.ismount.
+    def is_mount() -> bool:
+        checker = getattr(output_dir, "is_mount", None)
+        if checker is None:
+            return os.path.ismount(os.fspath(output_dir))
+        try:
+            return bool(checker())
+        except (NotImplementedError, OSError):
+            return os.path.ismount(os.fspath(output_dir))
+
     if output_dir.is_symlink() or is_junction() or is_mount():
         raise ValueError("--clean refuses a symlink, junction, or mount-point output directory")
     if output_dir.exists():
