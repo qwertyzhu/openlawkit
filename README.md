@@ -11,7 +11,7 @@
 
 Built for lawyers and legal-AI developers using coding agents. OpenLawKit is deliberately narrow, auditable, and human-reviewable—not a general legal chatbot.
 
-[Run the fictional demo](#run-the-repository-demo) · [Download the Word review Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/contract-comment-review.skill) · [Download the deadline Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/legal-deadline-extractor.skill) · [View v0.1.0](https://github.com/qwertyzhu/openlawkit/releases/tag/v0.1.0)
+[Run the fictional demo](#run-the-repository-demo) · [Download the Word review Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/contract-comment-review.skill) · [Download the deadline Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/legal-deadline-extractor.skill) · [View latest release](https://github.com/qwertyzhu/openlawkit/releases/latest)
 
 > **Early preview:** the first release covers two PRC workflows. It does not replace a lawyer or provide unattended legal advice.
 
@@ -25,7 +25,7 @@ An evidence-linked deadline record that preserves the trigger text, location, ru
 
 ![OpenLawKit deadline audit generated from a completely fictional labor-arbitration document](assets/deadline-audit.png)
 
-Both images come from the fictional fixtures in this repository. CI replays the deterministic workflows and integrity checks on Linux and Windows.
+Both images come from the fictional fixtures in this repository. CI replays the deterministic workflows and integrity checks on Linux, macOS, and Windows.
 
 ## Install the Skills
 
@@ -48,7 +48,7 @@ Copy the two directories under `skills/` into `~/.claude/skills/` for personal u
 
 The `.skill` archives contain instructions, scripts, schemas, and references; they do not bundle Python itself. The deterministic scripts require Python 3.10+ plus `lxml` and `python-docx`. The repository demo below installs those dependencies reproducibly.
 
-Release files: [contract-comment-review.skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/contract-comment-review.skill) · [legal-deadline-extractor.skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/legal-deadline-extractor.skill) · [SHA256SUMS.txt](https://github.com/qwertyzhu/openlawkit/releases/latest/download/SHA256SUMS.txt)
+Release files: [contract-comment-review.skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/contract-comment-review.skill) · [legal-deadline-extractor.skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/legal-deadline-extractor.skill) · [SHA256SUMS.txt](https://github.com/qwertyzhu/openlawkit/releases/latest/download/SHA256SUMS.txt). Each tagged release rebuilds those archives; verify them against `SHA256SUMS.txt` from the same release.
 
 ## Run the repository demo
 
@@ -113,7 +113,7 @@ See [Architecture](docs/architecture.md) for the trust boundaries and validation
 
 | Area | Current support |
 |---|---|
-| Runtime | Python 3.10+; CI on Ubuntu and Windows with Python 3.12 |
+| Runtime | Python 3.10+; CI on Ubuntu, Windows, and macOS with Python 3.10–3.12 |
 | Word review | `.docx` main-body paragraph anchors; visually opened in Microsoft Word for Windows |
 | Unsupported Word comment anchors | Tables, headers/footers, text boxes, hyperlinks/fields, revision containers, and overlapping anchors are rejected in v0.1; text inside body tables is still covered by integrity verification |
 | Deadline rules | The events explicitly listed in the PRC labor-arbitration and civil-enforcement v0.1 rule pack |

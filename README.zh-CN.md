@@ -11,7 +11,7 @@
 
 项目服务于使用编程 Agent 的律师与法律 AI 开发者。OpenLawKit 刻意保持场景窄、过程可审计、结果可人工复核，不做万能法律聊天机器人。
 
-[运行虚构样例](#运行仓库样例) · [下载合同批注 Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/contract-comment-review.skill) · [下载期限提取 Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/legal-deadline-extractor.skill) · [查看 v0.1.0](https://github.com/qwertyzhu/openlawkit/releases/tag/v0.1.0)
+[运行虚构样例](#运行仓库样例) · [下载合同批注 Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/contract-comment-review.skill) · [下载期限提取 Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/legal-deadline-extractor.skill) · [查看最新版本](https://github.com/qwertyzhu/openlawkit/releases/latest)
 
 > **早期预览版：** 首个版本只覆盖两个中国法场景。它不替代律师，也不提供无人复核的法律意见。
 
@@ -25,7 +25,7 @@
 
 ![OpenLawKit 根据完全虚构的劳动仲裁文书生成期限审计结果](assets/deadline-audit.png)
 
-两张图都来自仓库中的虚构样例。CI 会在 Linux 与 Windows 上复现确定性流程与完整性校验。
+两张图都来自仓库中的虚构样例。CI 会在 Linux、macOS 与 Windows 上复现确定性流程与完整性校验。
 
 ## 安装 Skills
 
@@ -48,7 +48,7 @@ Install both skills from qwertyzhu/openlawkit:
 
 `.skill` 包含说明、脚本、schema 和参考资料，但不捆绑 Python。确定性脚本需要 Python 3.10+、`lxml` 和 `python-docx`。下面的仓库样例会用项目配置安装这些依赖。
 
-Release 文件：[contract-comment-review.skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/contract-comment-review.skill) · [legal-deadline-extractor.skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/legal-deadline-extractor.skill) · [SHA256SUMS.txt](https://github.com/qwertyzhu/openlawkit/releases/latest/download/SHA256SUMS.txt)
+Release 文件：[contract-comment-review.skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/contract-comment-review.skill) · [legal-deadline-extractor.skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/legal-deadline-extractor.skill) · [SHA256SUMS.txt](https://github.com/qwertyzhu/openlawkit/releases/latest/download/SHA256SUMS.txt)。每次打版本标签都会重建这些归档；请用同一 Release 里的 `SHA256SUMS.txt` 校验。
 
 ## 运行仓库样例
 
@@ -113,7 +113,7 @@ flowchart LR
 
 | 范围 | 当前支持情况 |
 |---|---|
-| 运行环境 | Python 3.10+；CI 使用 Python 3.12 覆盖 Ubuntu 与 Windows |
+| 运行环境 | Python 3.10+；CI 使用 Python 3.10–3.12 覆盖 Ubuntu、Windows 与 macOS |
 | Word 审查 | `.docx` 正文段落锚点；已在 Windows 版 Microsoft Word 中目视打开验收 |
 | 暂不支持的 Word 批注锚点 | 表格、页眉页脚、文本框、超链接/域、修订容器和重叠锚点，v0.1 会主动拒绝；正文表格中的文字仍纳入完整性校验 |
 | 期限规则 | v0.1 中国劳动仲裁与民事执行规则包中明确列出的事件 |
