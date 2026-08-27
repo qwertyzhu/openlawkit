@@ -162,6 +162,133 @@ class ContractCommentReviewTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("paragraph text changed", result.stderr)
 
+    def test_simple_table_cell_anchor_is_written_and_verified(self) -> None:
+        source = self.work / "simple-table.docx"
+        document = Document()
+        document.add_paragraph("Fictional preamble")
+        table = document.add_table(rows=1, cols=2)
+        table.cell(0, 0).text = "Item"
+        table.cell(0, 1).text = "FICTIONAL UNIT PRICE"
+        document.save(source)
+        findings = self.work / "simple-table-findings.json"
+        findings.write_text(
+            json.dumps(
+                {
+                    "language": "en",
+                    "findings": [
+                        {
+                            "finding_id": "TABLE-CELL-1",
+                            "paragraph_text": "FICTIONAL UNIT PRICE",
+                            "anchor_text": "FICTIONAL UNIT PRICE",
+                            "risk": "High",
+                            "issue_type": "Price term",
+                            "risk_reason": "The fictional unit price is undefined.",
+                            "revision_suggestion": "Define the fictional unit price.",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        reviewed = self.work / "simple-table-reviewed.docx"
+        added = run_cli(ADD_COMMENTS, source, findings, "-o", reviewed)
+        self.assertEqual(added.returncode, 0, added.stderr)
+        verified = run_cli(VERIFY_COMMENTS, source, reviewed, findings)
+        self.assertEqual(verified.returncode, 0, verified.stderr)
+        report = json.loads(verified.stdout)
+        self.assertEqual(report["status"], "ok")
+        self.assertEqual(report["new_comment_count"], 1)
+        self.assertEqual(document_body_text(source), document_body_text(reviewed))
+        with zipfile.ZipFile(reviewed, "r") as package:
+            comments_root = etree.fromstring(package.read("word/comments.xml"))
+            document_root = etree.fromstring(package.read("word/document.xml"))
+        comments = comments_root.xpath("./w:comment", namespaces=NS)
+        self.assertEqual(len(comments), 1)
+        cell_paragraphs = document_root.xpath(
+            "/w:document/w:body/w:tbl/w:tr/w:tc/w:p", namespaces=NS
+        )
+        cell_texts = [
+            "".join(paragraph.xpath(".//w:t/text()", namespaces=NS))
+            for paragraph in cell_paragraphs
+        ]
+        self.assertIn("FICTIONAL UNIT PRICE", cell_texts)
+        anchored = [
+            paragraph
+            for paragraph in cell_paragraphs
+            if paragraph.xpath("./w:commentRangeStart", namespaces=NS)
+        ]
+        self.assertEqual(len(anchored), 1)
+        self.assertEqual(
+            "".join(anchored[0].xpath(".//w:t/text()", namespaces=NS)),
+            "FICTIONAL UNIT PRICE",
+        )
+
+    def test_merged_table_cell_anchor_is_rejected(self) -> None:
+        source = self.work / "merged-table.docx"
+        document = Document()
+        table = document.add_table(rows=1, cols=2)
+        table.cell(0, 0).merge(table.cell(0, 1))
+        table.cell(0, 0).text = "MERGED FICTIONAL TERM"
+        document.save(source)
+        findings = self.work / "merged-table-findings.json"
+        findings.write_text(
+            json.dumps(
+                {
+                    "language": "en",
+                    "findings": [
+                        {
+                            "finding_id": "TABLE-MERGED-1",
+                            "paragraph_text": "MERGED FICTIONAL TERM",
+                            "anchor_text": "MERGED FICTIONAL TERM",
+                            "risk": "Medium",
+                            "issue_type": "Merged cell",
+                            "risk_reason": "Merged cells are ambiguous.",
+                            "revision_suggestion": "Split the cell before commenting.",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        output = self.work / "must-not-exist-merged.docx"
+        result = run_cli(ADD_COMMENTS, source, findings, "-o", output)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("merged table cells are unsupported", result.stderr)
+        self.assertFalse(output.exists())
+
+    def test_nested_table_cell_anchor_is_rejected(self) -> None:
+        source = self.work / "nested-table.docx"
+        document = Document()
+        outer = document.add_table(rows=1, cols=1)
+        inner = outer.cell(0, 0).add_table(rows=1, cols=1)
+        inner.cell(0, 0).text = "NESTED FICTIONAL TERM"
+        document.save(source)
+        findings = self.work / "nested-table-findings.json"
+        findings.write_text(
+            json.dumps(
+                {
+                    "language": "en",
+                    "findings": [
+                        {
+                            "finding_id": "TABLE-NESTED-1",
+                            "paragraph_text": "NESTED FICTIONAL TERM",
+                            "anchor_text": "NESTED FICTIONAL TERM",
+                            "risk": "Low",
+                            "issue_type": "Nested table",
+                            "risk_reason": "Nested tables are ambiguous.",
+                            "revision_suggestion": "Flatten the table before commenting.",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        output = self.work / "must-not-exist-nested.docx"
+        result = run_cli(ADD_COMMENTS, source, findings, "-o", output)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("nested tables are unsupported", result.stderr)
+        self.assertFalse(output.exists())
+
     def test_verifier_detects_table_text_tampering(self) -> None:
         source = self.work / "table-input.docx"
         document = Document()

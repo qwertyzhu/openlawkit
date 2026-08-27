@@ -3,7 +3,8 @@
 
 This module intentionally refuses complex or ambiguous anchors. It never edits
 the visible contract text; it only splits simple text runs at comment boundaries
-and adds the standard OOXML comment parts and markers.
+and adds the standard OOXML comment parts and markers. Simple body-table cells
+are supported; merged, nested, or otherwise ambiguous table structures are not.
 """
 
 from __future__ import annotations
@@ -74,6 +75,81 @@ def paragraph_text(paragraph: etree._Element) -> str:
 def canonical_body_text(document_root: etree._Element) -> str:
     paragraphs = document_root.xpath("/w:document/w:body//w:p", namespaces=NS)
     return "\n".join(paragraph_text(p) for p in paragraphs)
+
+
+_LOCATION_SUPPORTED = "supported"
+_LOCATION_NESTED_TABLE = "nested-table"
+_LOCATION_MERGED_TABLE = "merged-table"
+_LOCATION_AMBIGUOUS_TABLE = "ambiguous-table"
+_LOCATION_UNSUPPORTED = "unsupported"
+_LOCATION_ERRORS = {
+    _LOCATION_NESTED_TABLE: "nested tables are unsupported",
+    _LOCATION_MERGED_TABLE: "merged table cells are unsupported",
+    _LOCATION_AMBIGUOUS_TABLE: "ambiguous table cell content is unsupported",
+    _LOCATION_UNSUPPORTED: "anchors in this Word structure are unsupported",
+}
+
+
+def _table_unsupported_reason(table: etree._Element) -> str | None:
+    if table.xpath(".//w:tbl", namespaces=NS):
+        return _LOCATION_NESTED_TABLE
+    for cell in table.xpath("./w:tr/w:tc", namespaces=NS):
+        properties = cell.find(_qn("tcPr"))
+        if properties is None:
+            continue
+        if (
+            properties.find(_qn("gridSpan")) is not None
+            or properties.find(_qn("vMerge")) is not None
+            or properties.find(_qn("hMerge")) is not None
+        ):
+            return _LOCATION_MERGED_TABLE
+    return None
+
+
+def classify_anchor_paragraph(paragraph: etree._Element) -> str:
+    """Classify whether a body paragraph may receive a comment anchor."""
+    parent = paragraph.getparent()
+    if parent is None:
+        return _LOCATION_UNSUPPORTED
+    if parent.tag == _qn("body"):
+        return _LOCATION_SUPPORTED
+    if parent.tag != _qn("tc"):
+        return _LOCATION_UNSUPPORTED
+    row = parent.getparent()
+    if row is None or row.tag != _qn("tr"):
+        return _LOCATION_UNSUPPORTED
+    table = row.getparent()
+    if table is None or table.tag != _qn("tbl"):
+        return _LOCATION_UNSUPPORTED
+    table_parent = table.getparent()
+    if table_parent is None or table_parent.tag != _qn("body"):
+        return _LOCATION_NESTED_TABLE
+    table_reason = _table_unsupported_reason(table)
+    if table_reason is not None:
+        return table_reason
+    allowed = {_qn("tcPr"), _qn("p")}
+    if any(child.tag not in allowed for child in parent):
+        return _LOCATION_AMBIGUOUS_TABLE
+    return _LOCATION_SUPPORTED
+
+
+def comment_anchor_paragraphs(document_root: etree._Element) -> list[etree._Element]:
+    """Return body paragraphs that may host a comment, in document order."""
+    return [
+        paragraph
+        for paragraph in document_root.xpath("/w:document/w:body//w:p", namespaces=NS)
+        if classify_anchor_paragraph(paragraph) == _LOCATION_SUPPORTED
+    ]
+
+
+def _unsupported_paragraph_error(finding_id: str, needle: str, document_root: etree._Element) -> str:
+    for paragraph in document_root.xpath("/w:document/w:body//w:p", namespaces=NS):
+        if paragraph_text(paragraph) != needle:
+            continue
+        kind = classify_anchor_paragraph(paragraph)
+        if kind != _LOCATION_SUPPORTED:
+            return f"{finding_id}: {_LOCATION_ERRORS[kind]}"
+    return f"{finding_id}: paragraph_text not found"
 
 
 def comments_relationship_target(
@@ -211,7 +287,7 @@ def _plan_comments(
     findings: list[dict[str, Any]],
     first_comment_id: int,
 ) -> list[PlannedComment]:
-    paragraphs = document_root.xpath("/w:document/w:body/w:p", namespaces=NS)
+    paragraphs = comment_anchor_paragraphs(document_root)
     paragraph_strings = [paragraph_text(p) for p in paragraphs]
     plans: list[PlannedComment] = []
 
@@ -222,6 +298,10 @@ def _plan_comments(
             for index, (paragraph, text) in enumerate(zip(paragraphs, paragraph_strings), start=1)
             if text == finding["paragraph_text"]
         ]
+        if not p_matches:
+            raise CommentWriterError(
+                _unsupported_paragraph_error(finding_id, finding["paragraph_text"], document_root)
+            )
         p_number, paragraph = _select_occurrence(
             p_matches,
             finding.get("paragraph_occurrence"),
@@ -283,7 +363,7 @@ def _simple_text_runs(paragraph: etree._Element) -> list[tuple[etree._Element, i
     if cursor != len(paragraph_text(paragraph)):
         raise CommentWriterError(
             "paragraph contains nested/complex text (for example hyperlink or tracked change); "
-            "v0.1 refuses to guess the comment range"
+            "refusing to guess the comment range"
         )
     return result
 

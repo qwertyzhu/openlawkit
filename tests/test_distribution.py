@@ -165,7 +165,7 @@ def test_pack_skills_builds_reproducible_runtime_archives(tmp_path: Path) -> Non
     notes = (first / "RELEASE_NOTES.md").read_text(encoding="utf-8")
     assert notes.startswith(f"OpenLawKit {_pyproject_version()}")
     assert f"## {_pyproject_version()}" in notes
-    assert "reproducible `.skill` packer" in notes
+    assert "simple Word table-cell comment anchors" in notes
     assert "No silent changes to contract body text." in notes
 
 
@@ -272,7 +272,7 @@ def test_changelog_section_matches_dated_headings() -> None:
         _pyproject_version(),
     )
     assert body.startswith(f"## {_pyproject_version()}")
-    assert "reproducible `.skill` packer" in body
+    assert "simple Word table-cell comment anchors" in body
 
 
 def test_pack_skills_project_version_matches_pyproject() -> None:

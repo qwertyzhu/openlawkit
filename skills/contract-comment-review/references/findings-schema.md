@@ -31,7 +31,7 @@ Use UTF-8 JSON with this top-level shape:
 ## Required finding fields
 
 - `finding_id`: unique stable identifier.
-- `paragraph_text`: exact complete text of one main-document paragraph.
+- `paragraph_text`: exact complete text of one main-document paragraph, including a simple body-table cell paragraph.
 - `anchor_text`: exact non-empty substring of that paragraph.
 - `risk`: exactly `High`, `Medium`, or `Low`.
 - `issue_type`, `risk_reason`, `revision_suggestion`: non-empty strings.
@@ -44,5 +44,5 @@ The writer constructs the three required comment headings. Do not place the head
 
 - Copy text from the actual `.docx`; do not retype punctuation from memory.
 - Prefer the shortest anchor that identifies the problem.
-- Do not create overlapping anchors in the same paragraph in v0.1.
-- If the target is outside an ordinary main-body paragraph, record it as unsupported and handle it manually.
+- Do not create overlapping anchors in the same paragraph.
+- Simple body-table cells are supported. Merged cells, nested tables, headers, footers, text boxes, fields, and other ambiguous structures remain unsupported and must be handled manually.

@@ -4,7 +4,7 @@ OpenLawKit separates language-model judgment from deterministic document operati
 
 ## Contract review
 
-The agent reads the contract, the represented party, and the requested depth. It produces a structured finding ledger. A local script then anchors each approved finding to existing text and writes native Word comments. A verifier compares the canonical text of every paragraph under the Word document body—including paragraphs inside tables—and checks that the required OOXML comment parts and relationships exist.
+The agent reads the contract, the represented party, and the requested depth. It produces a structured finding ledger. A local script then anchors each approved finding to existing text and writes native Word comments, including exact anchors in simple body-table cells. Merged, nested, or otherwise ambiguous table structures are refused. A verifier compares the canonical text of every paragraph under the Word document body—including paragraphs inside tables—and checks that the required OOXML comment parts and relationships exist.
 
 The verifier cannot prove that legal judgment is correct. It proves a narrower and important invariant: the review process did not silently rewrite the source contract, and every delivered comment has the required structure.
 
