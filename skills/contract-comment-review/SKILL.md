@@ -40,7 +40,7 @@ If the represented party or another fact would materially change the review, ask
 
 ### 1. Inspect safely
 
-Confirm that the input is a `.docx`. Preserve the original file. Read the main document, tables, headers, footers, footnotes, and existing comments when they matter. The bundled writer currently anchors comments only in main-document paragraphs; if a target clause is in a table, header, footer, text box, field, or tracked-change container, report that limitation and do not pretend it was commented.
+Confirm that the input is a `.docx`. Preserve the original file. Read the main document, tables, headers, footers, footnotes, and existing comments when they matter. The bundled writer anchors comments in ordinary main-document paragraphs and in simple body-table cells. If a target clause is in a merged or nested table, header, footer, text box, field, or tracked-change container, report that limitation and do not pretend it was commented.
 
 ### 2. Review in four layers
 
@@ -55,7 +55,7 @@ Separate fact, judgment, and recommendation. Preserve the exact quoted clause. V
 
 ### 3. Create findings JSON
 
-Follow [references/findings-schema.md](references/findings-schema.md). Each finding must identify one exact main-body paragraph and one exact anchor. Avoid overlapping anchors.
+Follow [references/findings-schema.md](references/findings-schema.md). Each finding must identify one exact main-body paragraph or simple table-cell paragraph and one exact anchor. Avoid overlapping anchors.
 
 ### 4. Add native comments
 

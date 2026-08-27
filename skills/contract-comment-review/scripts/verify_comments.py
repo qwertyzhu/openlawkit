@@ -23,6 +23,7 @@ from add_comments import (
     W_NS,
     CommentWriterError,
     canonical_body_text,
+    comment_anchor_paragraphs,
     comment_lines,
     comments_relationship_target,
     load_findings,
@@ -85,7 +86,7 @@ def _anchored_text(
     document_root: etree._Element, comment_id: str
 ) -> tuple[str, int, int]:
     found: list[tuple[str, int, int]] = []
-    paragraphs = document_root.xpath("/w:document/w:body/w:p", namespaces=NS)
+    paragraphs = comment_anchor_paragraphs(document_root)
     for paragraph_number, paragraph in enumerate(paragraphs, start=1):
         active = False
         pieces: list[str] = []
@@ -270,7 +271,17 @@ def verify(input_path: Path, output_path: Path, findings_path: Path) -> dict[str
             raise CommentWriterError(
                 f"{finding['finding_id']}: anchored text mismatch: {anchor!r}"
             )
-        if output_top_level_paragraphs[paragraph_number - 1] != finding["paragraph_text"]:
+        if paragraph_text(expected_plan.paragraph) != finding["paragraph_text"]:
+            raise CommentWriterError(
+                f"{finding['finding_id']}: comment is anchored in the wrong paragraph"
+            )
+        output_anchor_paragraphs = comment_anchor_paragraphs(output_document)
+        if (
+            paragraph_number < 1
+            or paragraph_number > len(output_anchor_paragraphs)
+            or paragraph_text(output_anchor_paragraphs[paragraph_number - 1])
+            != finding["paragraph_text"]
+        ):
             raise CommentWriterError(
                 f"{finding['finding_id']}: comment is anchored in the wrong paragraph"
             )

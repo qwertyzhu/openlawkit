@@ -114,8 +114,9 @@ See [Architecture](docs/architecture.md) for the trust boundaries and validation
 | Area | Current support |
 |---|---|
 | Runtime | Python 3.10+; CI on Ubuntu, Windows, and macOS with Python 3.10–3.12 |
-| Word review | `.docx` main-body paragraph anchors; visually opened in Microsoft Word for Windows |
-| Unsupported Word comment anchors | Tables, headers/footers, text boxes, hyperlinks/fields, revision containers, and overlapping anchors are rejected in v0.1; text inside body tables is still covered by integrity verification |
+| Fresh clone demo | Ubuntu 24.04 (WSL2), Python 3.11.15, 2026-08-27: `pip install -e .` then `python scripts/run_demo.py --clean` produced `demo-output/reviewed.docx`, `contract-verification.json` (status `ok`), and `deadlines` JSON/Markdown/ICS with confirmed `2026-06-23`. No extra Linux packages were required. macOS and Windows: the same demo command runs in CI on Python 3.10–3.12; no extra platform-specific install steps are recorded. |
+| Word review | `.docx` main-body paragraph anchors and simple (non-merged, non-nested) body-table cell anchors; visually opened in Microsoft Word for Windows |
+| Unsupported Word comment anchors | Merged/nested/ambiguous tables, headers/footers, text boxes, hyperlinks/fields, revision containers, and overlapping anchors are rejected; text inside body tables is still covered by integrity verification |
 | Deadline rules | The events explicitly listed in the PRC labor-arbitration and civil-enforcement v0.1 rule pack |
 | Calendar | The included official 2026 PRC holiday-adjustment calendar; other years require another verified calendar |
 | Legal judgment | Human review is always required; structural verification is not proof that legal advice is correct |

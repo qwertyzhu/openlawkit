@@ -8,6 +8,16 @@ are year-scoped files. A software patch must not silently expand legal rules.
 
 ## Unreleased
 
+## 0.2.0 - 2026-08-27
+
+Minor release: simple Word table-cell comment anchors and documented fresh-clone
+verification. It does not expand the v0.1 legal rule pack.
+
+- Allow exact native comment anchors in simple (non-merged, non-nested) body-table cells.
+- Still refuse merged cells, nested tables, ambiguous table content, headers/footers, text boxes, fields, and overlapping anchors.
+- Keep full-body text integrity verification, including table text.
+- Record the documented fresh-clone demo on Ubuntu 24.04 (WSL2); macOS and Windows continue to run the same demo in CI.
+
 ## 0.1.1 - 2026-08-20
 
 Patch release: ships the post-0.1.0 onboarding and verification hardening that was

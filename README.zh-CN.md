@@ -114,8 +114,9 @@ flowchart LR
 | 范围 | 当前支持情况 |
 |---|---|
 | 运行环境 | Python 3.10+；CI 使用 Python 3.10–3.12 覆盖 Ubuntu、Windows 与 macOS |
-| Word 审查 | `.docx` 正文段落锚点；已在 Windows 版 Microsoft Word 中目视打开验收 |
-| 暂不支持的 Word 批注锚点 | 表格、页眉页脚、文本框、超链接/域、修订容器和重叠锚点，v0.1 会主动拒绝；正文表格中的文字仍纳入完整性校验 |
+| 全新克隆样例 | Ubuntu 24.04（WSL2）、Python 3.11.15、2026-08-27：按文档执行 `pip install -e .` 与 `python scripts/run_demo.py --clean`，得到 `demo-output/reviewed.docx`、`contract-verification.json`（status `ok`），以及含 `2026-06-23` confirmed 结果的 deadlines JSON/Markdown/ICS。无需额外 Linux 系统包。macOS 与 Windows：同一条 demo 命令在 CI 的 Python 3.10–3.12 上执行；未记录额外的平台安装步骤。 |
+| Word 审查 | `.docx` 正文段落锚点，以及未合并、未嵌套的简单表格单元格锚点；已在 Windows 版 Microsoft Word 中目视打开验收 |
+| 暂不支持的 Word 批注锚点 | 合并/嵌套/结构含混的表格、页眉页脚、文本框、超链接/域、修订容器和重叠锚点会主动拒绝；正文表格中的文字仍纳入完整性校验 |
 | 期限规则 | v0.1 中国劳动仲裁与民事执行规则包中明确列出的事件 |
 | 日历 | 仓库内已核实的 2026 年国务院放假调休表；其他年份须另行提供已核实日历 |
 | 法律判断 | 始终需要人工复核；结构校验通过不等于法律意见正确 |

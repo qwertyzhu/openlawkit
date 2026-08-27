@@ -44,6 +44,6 @@ Keep these separate:
 
 When a legal proposition has not been checked against a current primary source, say so. Never fabricate an article number or court practice.
 
-## Technical boundary in v0.1
+## Technical boundary
 
-The bundled comment writer supports exact anchors in ordinary main-document paragraphs made of simple Word text runs. It deliberately refuses tables, headers, footers, text boxes, fields, hyperlinks, drawings, tracked-change containers, and overlapping comment ranges. A refusal is safer than a comment attached to the wrong clause.
+The bundled comment writer supports exact anchors in ordinary main-document paragraphs and in simple body-table cells made of simple Word text runs. It deliberately refuses merged cells, nested tables, ambiguous table content, headers, footers, text boxes, fields, hyperlinks, drawings, tracked-change containers, and overlapping comment ranges. A refusal is safer than a comment attached to the wrong clause.
