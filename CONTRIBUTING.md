@@ -1,5 +1,7 @@
 # Contributing
 
+中文版见 [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md)。
+
 Contributions are welcome when they remain small, testable, and safe for public reuse.
 
 ## Development setup

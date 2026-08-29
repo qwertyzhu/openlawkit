@@ -1,5 +1,7 @@
 # Security policy
 
+中文版见 [SECURITY.zh-CN.md](SECURITY.zh-CN.md)。
+
 ## Supported versions
 
 Only the latest tagged release receives security fixes during the early preview.
