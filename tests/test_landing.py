@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEMO_SCRIPT = ROOT / "scripts" / "run_demo.py"
-READMES = (ROOT / "README.md", ROOT / "README.zh-CN.md")
+READMES = (ROOT / "README.md", ROOT / "README.en.md")
 SKILL_PATHS = (
     "skills/contract-comment-review",
     "skills/legal-deadline-extractor",
@@ -148,6 +148,26 @@ def test_public_descriptions_include_chinese() -> None:
 def test_readme_good_first_issue_claim_is_bilingual() -> None:
     mentions = ["good first issue" in _readme_text(path) for path in READMES]
     assert mentions[0] == mentions[1], "README EN/ZH disagree about good first issue"
+
+
+def test_social_preview_asset_exists() -> None:
+    preview = ROOT / "assets" / "openlawkit-social-preview-1280.png"
+    assert preview.is_file()
+    assert preview.stat().st_size > 10_000
+
+
+def test_default_readme_is_chinese() -> None:
+    default = _readme_text(ROOT / "README.md")
+    english = _readme_text(ROOT / "README.en.md")
+    stub = _readme_text(ROOT / "README.zh-CN.md")
+    assert "运行仓库样例" in default
+    assert "Run the repository demo" in english
+    assert "运行仓库样例" not in english
+    assert "README.md" in stub
+    assert (ROOT / "CONTRIBUTING.zh-CN.md").is_file()
+    assert (ROOT / "SECURITY.zh-CN.md").is_file()
+    assert "贡献指南" in default
+    assert "CONTRIBUTING.md" in english
 
 
 def test_run_demo_script_produces_documented_outputs(tmp_path: Path) -> None:

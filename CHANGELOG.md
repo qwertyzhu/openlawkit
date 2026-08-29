@@ -11,6 +11,7 @@ are year-scoped files. A software patch must not silently expand legal rules.
 - Keep the bilingual landing pages honest about remaining Word/calendar limits and the contributor issue list.
 - Add regression tests for public version alignment, README install/demo paths, and the documented `run_demo.py` outputs.
 - Make the public project description bilingual (Chinese first) in the READMEs, package metadata, and Codex plugin text.
+- Make Simplified Chinese the default repository README, keep English in `README.en.md`, and add Chinese contributing/security/conduct guides.
 
 ## 0.2.0 - 2026-08-27
 
