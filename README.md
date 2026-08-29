@@ -120,7 +120,7 @@ flowchart LR
 | Word 审查 | `.docx` 正文段落锚点，以及未合并、未嵌套的简单表格单元格锚点；已在 Windows 版 Microsoft Word 中目视打开验收 |
 | 暂不支持的 Word 批注锚点 | 合并/嵌套/结构含混的表格、页眉页脚、文本框、超链接/域、修订容器和重叠锚点会主动拒绝；正文表格中的文字仍纳入完整性校验 |
 | 期限规则 | v0.1 中国劳动仲裁与民事执行规则包中明确列出的事件 |
-| 日历 | 仓库内已核实的 2026 年国务院放假调休表；其他年份须另行提供已核实日历 |
+| 日历 | 仓库内已核实的 2025 年与 2026 年国务院放假调休表；其他年份须另行提供已核实日历 |
 | 法律判断 | 始终需要人工复核；结构校验通过不等于法律意见正确 |
 
 期限规则的具体纳入项、排除项与官方法源，见 [v0.1 期限规则范围](docs/rule-scope.zh-CN.md)。
@@ -129,7 +129,7 @@ flowchart LR
 
 下一阶段最有价值的工作，是扩大真实结构的虚构回归样例、持续验证跨平台上手流程、建立安全的规则贡献方式，并在不削弱正文完整性校验的前提下支持更多 Word 结构。
 
-兼容性表里已经写明、但仍未交付的限制——合并/嵌套表格锚点、页眉页脚、非 2026 年日历——以 [open issue](https://github.com/qwertyzhu/openlawkit/issues) 跟踪，不是已经交付的能力。
+兼容性表里已经写明、但仍未交付的限制——合并/嵌套表格锚点、页眉页脚、2025/2026 以外年份的日历——以 [open issue](https://github.com/qwertyzhu/openlawkit/issues) 跟踪，不是已经交付的能力。
 
 - 使用问题、想法和安全演示请发到 [Discussions](https://github.com/qwertyzhu/openlawkit/discussions)；
 - 从 [`good first issue`](https://github.com/qwertyzhu/openlawkit/labels/good%20first%20issue) 或 [open issue 列表](https://github.com/qwertyzhu/openlawkit/issues) 选择边界清楚的贡献；

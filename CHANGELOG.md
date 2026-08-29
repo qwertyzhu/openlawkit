@@ -8,10 +8,17 @@ are year-scoped files. A software patch must not silently expand legal rules.
 
 ## Unreleased
 
-- Keep the bilingual landing pages honest about remaining Word/calendar limits and the contributor issue list.
-- Add regression tests for public version alignment, README install/demo paths, and the documented `run_demo.py` outputs.
-- Make the public project description bilingual (Chinese first) in the READMEs, package metadata, and Codex plugin text.
-- Make Simplified Chinese the default repository README, keep English in `README.en.md`, and add Chinese contributing/security/conduct guides.
+## 0.2.1 - 2026-08-29
+
+Patch release: Chinese-first public landing, a verified 2025 holiday calendar,
+and a named header/footer comment refusal. It does not expand the v0.1 legal rule pack
+or add header/footer/merged-table comment anchors.
+
+- Make Simplified Chinese the default README; keep English in `README.en.md`.
+- Keep bilingual About/plugin copy and an honest remaining-work issue list.
+- Add `holidays-cn-2025.json` from 国办发明电〔2024〕12号, without changing `rules.json`.
+- Name header/footer comment anchors in the writer error instead of a generic missing-paragraph message.
+- Add landing-page regression tests for versions, README paths, and `run_demo.py`.
 
 ## 0.2.0 - 2026-08-27
 

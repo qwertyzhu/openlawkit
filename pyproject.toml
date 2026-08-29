@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openlawkit"
-version = "0.2.0"
+version = "0.2.1"
 description = "本地优先的中国法 Agent Skills：Word 原生批注合同审查与可审计法律期限 / Local-first PRC legal workflows for AI agents"
 readme = "README.md"
 requires-python = ">=3.10"

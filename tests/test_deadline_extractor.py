@@ -120,6 +120,51 @@ class DeadlineExtractorTests(unittest.TestCase):
         )
         self.assertEqual("第三十三条、第八十条", procedural_source["article"])
 
+    def test_confirmed_working_days_use_2025_official_calendar(self) -> None:
+        holidays_2025 = calculator.HolidayCalendar.from_json(
+            calculator.load_json(SKILL / "references" / "holidays-cn-2025.json")
+        )
+        self.assertTrue(
+            holidays_2025.non_working_dates.isdisjoint(
+                holidays_2025.working_weekend_dates
+            )
+        )
+        self.assertEqual(
+            "https://www.gov.cn/zhengce/content/202411/content_6986382.htm",
+            holidays_2025.source_url,
+        )
+        facts = {
+            "schema_version": "1.0",
+            "matter_id": "FICTIONAL-2025-WORKDAY",
+            "events": [
+                {
+                    "event_id": "defense-2025",
+                    "event_type": "arbitration_application_copy_received",
+                    "procedure_type": "labor_arbitration",
+                    "participant_role": "respondent",
+                    "classifiers": {},
+                    "trigger_date": "2025-04-25",
+                    "trigger_date_status": "confirmed",
+                    "original_excerpt": "虚构送达回证：2025年4月25日签收申请书副本。",
+                    "source_locator": {
+                        "file_name": "fictional-notice-2025.txt",
+                        "location": "送达回证",
+                    },
+                    "rule_id": "CN-LAB-ARBITRATION-RESPONDENT-DEFENSE-10WD",
+                    "confidence": "high",
+                }
+            ],
+        }
+        with_official = calculator.calculate_all(facts, self.rules, holidays_2025)
+        without_official = calculator.calculate_all(facts, self.rules, None)
+        official = with_official["results"][0]
+        weekend_only = without_official["results"][0]
+
+        self.assertEqual("confirmed", official["status"])
+        self.assertEqual("2025-05-13", official["due_date"])
+        self.assertEqual("provisional", weekend_only["status"])
+        self.assertNotEqual(official["due_date"], weekend_only["due_date"])
+
     def test_missing_holiday_calendar_makes_date_provisional(self) -> None:
         facts = calculator.load_json(EXAMPLES / "fictional-labor-facts.json")
         output = calculator.calculate_all(facts, self.rules, None)
