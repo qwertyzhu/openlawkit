@@ -1,7 +1,7 @@
 interface:
-  display_name: "Legal Deadline Extractor"
+  display_name: "法律期限提取"
   short_description: "可审计中国法期限（缺事实不算死期）/ Extract evidence-linked PRC legal deadlines."
   brand_color: "#0B6E69"
-  default_prompt: "Extract auditable legal deadlines from this document. Preserve the trigger text and do not guess any missing date."
+  default_prompt: "请从这份文书中抽取可审计的法律期限。保留触发原文，不要猜测任何缺失日期。"
 policy:
   allow_implicit_invocation: true

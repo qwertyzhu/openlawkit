@@ -1,12 +1,10 @@
-# Contributing
+# 贡献指南
 
-中文版见 [CONTRIBUTING.zh-CN.md](CONTRIBUTING.zh-CN.md)。
+欢迎小范围、可测试、可公开复用的贡献。英文见 [CONTRIBUTING.en.md](CONTRIBUTING.en.md)。
 
-Contributions are welcome when they remain small, testable, and safe for public reuse.
+## 开发环境
 
-## Development setup
-
-OpenLawKit requires Python 3.10 or newer. From a fresh clone:
+OpenLawKit 需要 Python 3.10 或更高版本。从全新克隆开始：
 
 ```console
 python -m venv .venv
@@ -15,34 +13,34 @@ python -m pytest
 python scripts/run_demo.py --clean
 ```
 
-The test suite must pass, and the demo must produce a reviewed DOCX, an integrity report, and JSON/Markdown/ICS deadline outputs under `demo-output/`.
+测试必须通过；demo 必须在 `demo-output/` 下生成带批注的 DOCX、完整性校验报告，以及 JSON/Markdown/ICS 期限结果。
 
-## Contribution rules
+## 贡献规则
 
-1. Use only fictional or irreversibly de-identified fixtures.
-2. Link every legal rule change to a current official primary source and record the verification date.
-3. Add a regression case for every new rule or bug fix.
-4. Keep deterministic code separate from model judgment.
-5. Never weaken the two core invariants: no silent contract-text mutation, and no exact deadline without a verified trigger and rule.
+1. 样例只能使用虚构材料，或已不可逆脱敏的材料。
+2. 每一条法律规则变更都必须链接现行官方法源，并记录核验日期。
+3. 每条新规则或 bug 修复都要加回归测试。
+4. 确定性代码与模型判断分开。
+5. 不得削弱两条核心验收条件：不静默改动合同正文；没有已核实触发事实和规则时不输出确定期限。
 
-Before opening a pull request, run the test suite and include only the smallest relevant fictional generated artifacts. Do not submit live client materials, active case numbers, credentials, personal contact details, local machine paths, Word lock files, or model transcripts containing private data.
+提交 pull request 前请跑测试，只附带最小的、相关的虚构生成物。不要提交真实客户材料、在办案号、账号口令、个人联系方式、本机路径、Word 锁文件，或含有隐私的模型对话。
 
-## Versioning
+## 版本
 
-Software versions follow semantic versioning in `pyproject.toml` and `.codex-plugin/plugin.json`. The deadline rule pack uses its own `rule_pack_version` and verification date; holiday calendars are year-scoped files. A software patch must not silently expand legal rules or weaken the two core invariants.
+软件版本遵循 `pyproject.toml` 和 `.codex-plugin/plugin.json` 中的语义化版本。期限规则包使用独立的 `rule_pack_version` 和核验日期；节假日表按年份分文件。软件补丁不得静默扩充法律规则，也不得削弱上述两条核心验收条件。
 
-## Cutting a release
+## 发布
 
-1. Move `CHANGELOG.md` Unreleased notes into `X.Y.Z` and set that same version in `pyproject.toml` and `.codex-plugin/plugin.json`.
-2. Merge to `main`, push, and wait for CI.
-3. Create an annotated tag and push it. GitHub Actions packs reproducible `.skill` archives, writes `SHA256SUMS.txt`, and publishes the GitHub Release:
+1. 把 `CHANGELOG.md` 的 Unreleased 写入 `X.Y.Z`，并在 `pyproject.toml` 与 `.codex-plugin/plugin.json` 中设置同一版本。
+2. 合并到 `main`，推送，等待 CI。
+3. 打附注标签并推送。GitHub Actions 会打包可复现的 `.skill` 归档、写 `SHA256SUMS.txt`，并发布 GitHub Release：
 
 ```console
 git tag -a vX.Y.Z -m "OpenLawKit vX.Y.Z"
 git push origin vX.Y.Z
 ```
 
-To pack archives locally before tagging:
+打标签前如需本地打包：
 
 ```console
 python scripts/pack_skills.py --output-dir dist --expect-version X.Y.Z

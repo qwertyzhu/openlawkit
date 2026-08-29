@@ -133,11 +133,11 @@ flowchart LR
 
 - 使用问题、想法和安全演示请发到 [Discussions](https://github.com/qwertyzhu/openlawkit/discussions)；
 - 从 [`good first issue`](https://github.com/qwertyzhu/openlawkit/labels/good%20first%20issue) 或 [open issue 列表](https://github.com/qwertyzhu/openlawkit/issues) 选择边界清楚的贡献；
-- 提交规则或工作流前，请先阅读 [贡献指南](CONTRIBUTING.zh-CN.md)。
+- 提交规则或工作流前，请先阅读 [贡献指南](CONTRIBUTING.md)。
 
 ## 安全
 
-不要在公开 Issue 中提交客户姓名、案号、账号口令、内部路径或真实在办案件材料。安全漏洞或意外泄露请使用 [GitHub 私密漏洞报告](https://github.com/qwertyzhu/openlawkit/security/advisories/new)。详见 [安全说明](SECURITY.zh-CN.md)。
+不要在公开 Issue 中提交客户姓名、案号、账号口令、内部路径或真实在办案件材料。安全漏洞或意外泄露请使用 [GitHub 私密漏洞报告](https://github.com/qwertyzhu/openlawkit/security/advisories/new)。详见 [安全说明](SECURITY.md)。
 
 ## 许可证
 

@@ -1,100 +1,99 @@
 ---
 name: legal-deadline-extractor
-description: Extract legally relevant trigger dates from Chinese labor-arbitration and civil-enforcement documents, preserve verbatim evidence and source locations, and calculate only deadlines supported by an exact verified rule. Use when a user asks to extract, calculate, audit, or calendar legal deadlines from a notice, award, ruling, or an already structured facts JSON file.
+description: 从中国劳动仲裁与民事执行文书中抽取法律相关触发日期，保留原文与出处，仅在已核实规则精确匹配时计算期限。凡用户要求从通知书、裁决、裁定或已结构化的 facts JSON 中 extract / calculate / audit / calendar 法律期限时使用。
 ---
 
-# Legal Deadline Extractor
+# 法律期限提取
 
-Turn source documents into an auditable deadline register. Keep extraction and calculation separate: the agent extracts facts and evidence; the bundled script performs date arithmetic from a versioned rule pack.
+把源文书变成可审计的期限登记。抽取与计算分开：Agent 抽取事实和证据；随附脚本按版本化规则包做日期运算。
 
-## Non-negotiable safeguards
+## 不可妥协的边界
 
-- Process files locally unless the user explicitly requests another destination.
-- Never invent a delivery date, effective date, party role, procedure type, rule, holiday, or deadline.
-- A date printed on a document is not automatically the date of service or receipt.
-- Output no exact due date when the trigger date is missing or uncertain, the rule is missing, the rule is unverified, or the event does not match the rule conditions.
-- Treat an incomplete or absent holiday calendar as provisional whenever a rule counts working days or rolls a deadline forward from a non-working day.
-- Preserve the exact source wording in `original_excerpt` and a reproducible `source_locator` for every extracted event.
-- Do not write to a case-management system, calendar, email, or external service unless the user separately asks for that action.
-- Describe results as an aid for lawyer review, not as a substitute for legal advice.
+- 本地处理文件，除非用户明确要求其他去向。
+- 不得编造送达日、生效日、当事人角色、程序类型、规则、节假日或期限。
+- 文书上印着的日期，不等于送达日或签收日。
+- 触发日期缺失或不确定、规则缺失、规则未核验、或事件与规则条件不匹配时，不输出确定到期日。
+- 规则按工作日计算、或从非工作日顺延时，节假日表不完整或缺失则结果视为暂定。
+- 每个抽取事件都要在 `original_excerpt` 保留原文，并给出可复现的 `source_locator`。
+- 除非用户另行要求，不要写入案件管理系统、日历、邮件或外部服务。
+- 结果是律师复核辅助，不是法律意见替代品。
 
-## Workflow
+## 工作流
 
-### 1. Identify the document and scope
+### 1. 识别文书与范围
 
-Determine the document type, issuing body, case number, parties, relevant participant role, and procedure type. If the source is an image-only PDF, obtain OCR text but retain the page reference and flag OCR uncertainty.
+确定文书类型、作出机关、案号、当事人、相关参与人角色和程序类型。若源文件是纯图片 PDF，先 OCR，但保留页码并标出 OCR 不确定性。
 
-The public v0.1 rule pack covers only events explicitly present in `references/rules.json`. Do not stretch a nearby rule to a different party, award type, remedy, or procedural stage.
+公开 v0.1 规则包只覆盖 `references/rules.json` 中明确列出的事件。不要把邻近规则套到不同当事人、裁决类型、救济或程序阶段。
 
-### 2. Extract facts, not conclusions
+### 2. 抽取事实，不抽结论
 
-Create JSON conforming to `schemas/facts.schema.json`. For each possible deadline event, record:
+按 `schemas/facts.schema.json` 编写 JSON。对每个可能的期限事件记录：
 
-- `event_type` and `procedure_type`;
-- the relevant participant role and any required classifier, such as whether an award is final;
-- `trigger_date` only when the source establishes the legally required trigger event;
-- `trigger_date_status` as `confirmed`, `uncertain`, or `missing`;
-- an exact `original_excerpt` and `source_locator`;
-- an exact `rule_id` only after all rule conditions match;
-- extraction `confidence` and a short note about ambiguity.
+- `event_type` 与 `procedure_type`；
+- 相关参与人角色及必要分类，例如裁决是否终局；
+- 仅在源材料能证明法律要求的触发事件时填写 `trigger_date`；
+- `trigger_date_status` 为 `confirmed`、`uncertain` 或 `missing`；
+- 精确的 `original_excerpt` 与 `source_locator`；
+- 全部规则条件匹配后才填写精确 `rule_id`；
+- 抽取 `confidence` 以及关于歧义的短注。
 
-When a potentially important event lacks a trigger date, still include it with `trigger_date: null`. This makes the missing fact visible instead of silently dropping the deadline.
+重要事件缺少触发日期时，仍应纳入并设 `trigger_date: null`。这样缺失事实可见，而不是被静默丢掉。
 
-### 3. Match a verified rule
+### 3. 匹配已核实规则
 
-Read `references/rules.json`. Match the event against all listed `conditions`, including party role and document classification. A rule is usable only when:
+阅读 `references/rules.json`。把事件与全部 `conditions` 匹配，包括当事人角色和文书分类。规则仅在同时满足时可用：
 
-1. its `verification.status` is `verified`;
-2. every condition is satisfied by the extracted fact;
-3. the trigger event described by the rule is the event supported by the source excerpt.
+1. `verification.status` 为 `verified`；
+2. 每条条件都被抽取事实满足；
+3. 规则描述的触发事件，就是源摘录支持的事件。
 
-If any requirement fails, set `rule_id` to `null` or keep the candidate only in `notes`; the calculator will return `needs_confirmation` without an exact date.
+任一项失败，把 `rule_id` 设为 `null`，或只把候选留在 `notes`；计算器会返回 `needs_confirmation` 且没有确定日期。
 
-### 4. Calculate deterministically
+### 4. 确定性计算
 
-Run from the skill directory:
+在本 skill 目录下运行：
 
 ```powershell
 python scripts/calculate_deadlines.py <facts.json> --rules references/rules.json --output-dir <output-directory>
 ```
 
-For working-day rules or rules that roll forward from a non-working day, also provide a reviewed holiday file:
+工作日规则、或从非工作日顺延的规则，还需提供已复核的节假日文件：
 
 ```powershell
 python scripts/calculate_deadlines.py <facts.json> --rules references/rules.json --holidays <holidays.json> --output-dir <output-directory>
 ```
 
-The script writes:
+脚本写出：
 
-- `deadlines.json`: machine-readable results and warnings;
-- `deadlines.md`: a human-readable audit table;
-- `deadlines.ics`: calendar events only for results that have a computed date.
+- `deadlines.json`：机器可读结果与警告；
+- `deadlines.md`：人类可读审计表；
+- `deadlines.ics`：仅为已算出日期的结果生成日历事件。
 
-Never manually replace a `needs_confirmation` result with a guessed date. A `provisional` result may be used only as a reminder to verify the official holiday calendar and source facts.
+不得手工把 `needs_confirmation` 结果换成猜测日期。`provisional` 结果只能当作提醒，用于核验官方节假日表和源事实。
 
-### 5. Review before delivery
+### 5. 交付前复核
 
-For every result, verify:
+对每条结果核验：
 
-- the quoted trigger text exists in the stated source location;
-- the trigger date is the rule's required event, not merely a nearby printed date;
-- party role, award type, and procedure type satisfy the exact rule;
-- the calculation starts on the day after the trigger event unless the rule states otherwise;
-- a holiday calendar covers the full calculation range when required;
-- JSON, Markdown, and ICS dates agree;
-- all missing facts and provisional results are prominent.
+- 引用的触发原文存在于所述出处；
+- 触发日期是规则要求的事件，而不仅是附近印着的日期；
+- 当事人角色、裁决类型和程序类型满足该条规则；
+- 除非规则另有规定，计算从触发事件的次日开始；
+- 需要时，节假日表覆盖完整计算区间；
+- JSON、Markdown 与 ICS 日期一致；
+- 所有缺失事实和暂定结果都醒目。
 
-## Result meanings
+## 结果含义
 
-- `confirmed`: exact date calculated from a confirmed trigger, a verified matching rule, and any required complete holiday calendar.
-- `provisional`: a date was mechanically calculated, but holiday coverage or another expressly identified non-trigger fact remains incomplete.
-- `needs_confirmation`: no exact date is output because a trigger or verified matching rule is missing or uncertain.
+- `confirmed`：由已确认触发、已核实且匹配的规则，以及所需完整节假日表算出的确定日期。
+- `provisional`：机械上算出了日期，但节假日覆盖或另一项已标明的非触发事实仍不完整。
+- `needs_confirmation`：因触发或已核实匹配规则缺失/不确定，不输出确定日期。
 
-## Included resources
+## 随附资源
 
-- `schemas/facts.schema.json`: extraction contract.
-- `references/rules.json`: narrow, versioned rule pack with official sources.
-- `references/holidays.schema.json`: optional holiday-calendar contract.
-- `scripts/calculate_deadlines.py`: deterministic calculator and JSON/Markdown/ICS exporter.
-- `evals/evals.json`: regression prompts using only fictional material.
-
+- `schemas/facts.schema.json`：抽取约定。
+- `references/rules.json`：窄范围、带版本的规则包与官方法源。
+- `references/holidays.schema.json`：可选节假日表约定。
+- `scripts/calculate_deadlines.py`：确定性计算器与 JSON/Markdown/ICS 导出。
+- `evals/evals.json`：仅使用虚构材料的回归提示。

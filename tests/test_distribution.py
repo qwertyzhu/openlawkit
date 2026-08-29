@@ -168,8 +168,9 @@ def test_pack_skills_builds_reproducible_runtime_archives(tmp_path: Path) -> Non
     notes = (first / "RELEASE_NOTES.md").read_text(encoding="utf-8")
     assert notes.startswith(f"OpenLawKit {_pyproject_version()}")
     assert f"## {_pyproject_version()}" in notes
-    assert "does not expand the v0.1 legal rule pack" in notes
-    assert "No silent changes to contract body text." in notes
+    assert "不扩充 v0.1 法律规则包" in notes
+    for line in pack_skills.SAFETY_BOUNDARIES:
+        assert line in notes
 
 
 def test_packed_deadline_skill_still_calculates_confirmed_fixture(tmp_path: Path) -> None:
@@ -275,7 +276,7 @@ def test_changelog_section_matches_dated_headings() -> None:
         _pyproject_version(),
     )
     assert body.startswith(f"## {_pyproject_version()}")
-    assert "does not expand the v0.1 legal rule pack" in body
+    assert "不扩充 v0.1 法律规则包" in body
 
 
 def test_pack_skills_project_version_matches_pyproject() -> None:

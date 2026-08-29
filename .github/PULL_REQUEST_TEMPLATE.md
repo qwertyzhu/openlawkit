@@ -1,12 +1,12 @@
-## What changed
+## 改了什么
 
-## Why
+## 为什么
 
-## Verification
+## 如何验证
 
-- [ ] Tests pass.
-- [ ] New or changed legal rules cite an official primary source and verification date.
-- [ ] New behavior has a fictional regression fixture.
-- [ ] Contract outputs preserve the original body text.
-- [ ] Deadline outputs do not claim an exact date without a verified trigger and rule.
-- [ ] No real client, case, credential, personal contact, or local-path data is included.
+- [ ] 测试通过。
+- [ ] 新增或变更的法律规则已引用官方法源和核验日期。
+- [ ] 新行为有虚构回归样例。
+- [ ] 合同产出未改动原文正文。
+- [ ] 期限产出在缺少已核实触发事实和规则时，不给出确定日期。
+- [ ] 未包含真实客户、案件、口令、个人联系方式或本机路径。

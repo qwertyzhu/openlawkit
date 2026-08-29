@@ -1,44 +1,44 @@
-name: Bug report
-description: Report a reproducible problem using fictional or redacted data
-title: "[Bug]: "
+name: 缺陷报告
+description: 用虚构或已脱敏数据报告可复现问题
+title: "[缺陷]: "
 labels: ["bug", "triage"]
 body:
   - type: markdown
     attributes:
-      value: "Do not upload real contracts, case files, client identities, credentials, or confidential excerpts."
+      value: "禁止上传真实合同、卷宗、客户身份、账号口令或机密摘录。"
   - type: dropdown
     id: skill
     attributes:
-      label: Skill
+      label: 涉及的 Skill
       options:
         - contract-comment-review
         - legal-deadline-extractor
-        - repository or documentation
+        - 仓库或文档
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: Expected behavior
+      label: 期望行为
     validations:
       required: true
   - type: textarea
     id: actual
     attributes:
-      label: Actual behavior
+      label: 实际行为
     validations:
       required: true
   - type: textarea
     id: reproduction
     attributes:
-      label: Minimal fictional reproduction
-      description: Provide steps and a safe fixture, never a live matter file.
+      label: 最小虚构复现
+      description: 提供步骤和安全样例，不要附在办卷宗。
     validations:
       required: true
   - type: checkboxes
     id: privacy
     attributes:
-      label: Privacy confirmation
+      label: 隐私确认
       options:
-        - label: I confirm that this report contains no real client or case data.
+        - label: 我确认本报告不含真实客户或案件数据。
           required: true

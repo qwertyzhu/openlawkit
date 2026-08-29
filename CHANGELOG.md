@@ -1,24 +1,25 @@
-# Changelog
+# 更新日志
 
-All notable changes are documented here. The project follows semantic versioning.
+此处记录值得注意的变更。项目遵循语义化版本。
 
-Software versions live in `pyproject.toml` and `.codex-plugin/plugin.json`. Deadline
-rules keep a separate `rule_pack_version` and verification date; holiday calendars
-are year-scoped files. A software patch must not silently expand legal rules.
+软件版本写在 `pyproject.toml` 与 `.codex-plugin/plugin.json`。期限规则另有
+`rule_pack_version` 与核验日期；节假日表按年份分文件。软件补丁不得静默扩充法律规则。
 
 ## Unreleased
 
+- 社区文件（贡献指南 / 安全说明 / 行为准则 / Issue 与 PR 模板）改为中文优先；两个 Skill 入口改为简体中文。
+
 ## 0.2.1 - 2026-08-29
 
-Patch release: Chinese-first public landing, a verified 2025 holiday calendar,
-and a named header/footer comment refusal. It does not expand the v0.1 legal rule pack
-or add header/footer/merged-table comment anchors.
+补丁发布：中文优先的公开落地页、已核验的 2025 节假日表，
+以及页眉页脚批注拒绝时的具名报错。不扩充 v0.1 法律规则包，
+也不新增页眉页脚 / 合并表格批注锚点。
 
-- Make Simplified Chinese the default README; keep English in `README.en.md`.
-- Keep bilingual About/plugin copy and an honest remaining-work issue list.
-- Add `holidays-cn-2025.json` from 国办发明电〔2024〕12号, without changing `rules.json`.
-- Name header/footer comment anchors in the writer error instead of a generic missing-paragraph message.
-- Add landing-page regression tests for versions, README paths, and `run_demo.py`.
+- 默认 README 改为简体中文；英文放在 `README.en.md`。
+- 保留中英 About / plugin 文案，以及诚实的未完成事项列表。
+- 新增 `holidays-cn-2025.json`，来源国办发明电〔2024〕12号，不改 `rules.json`。
+- 页眉页脚批注锚点在写入报错中具名，不再使用笼统的缺段落提示。
+- 为版本、README 路径和 `run_demo.py` 增加落地页回归测试。
 
 ## 0.2.0 - 2026-08-27
 

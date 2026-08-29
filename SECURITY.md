@@ -1,17 +1,17 @@
-# Security policy
+# 安全说明
 
-中文版见 [SECURITY.zh-CN.md](SECURITY.zh-CN.md)。
+英文见 [SECURITY.en.md](SECURITY.en.md)。
 
-## Supported versions
+## 支持的版本
 
-Only the latest tagged release receives security fixes during the early preview.
+早期预览阶段，仅最新打标签的 Release 接受安全修复。
 
-## Reporting a vulnerability
+## 报告漏洞
 
-Please use [GitHub private vulnerability reporting](https://github.com/qwertyzhu/openlawkit/security/advisories/new). Do not put real contracts, case files, client identities, credentials, internal paths, or confidential excerpts in a public issue.
+请使用 [GitHub 私密漏洞报告](https://github.com/qwertyzhu/openlawkit/security/advisories/new)。不要在公开 Issue 中提交真实合同、卷宗、客户身份、账号口令、内部路径或机密摘录。
 
-Provide the smallest fictional or redacted reproduction possible. If a report concerns accidental disclosure, state what data class was exposed and where, but do not repeat the sensitive content.
+尽量提供最小的虚构或已脱敏复现。若报告涉及意外泄露，说明暴露的数据类别和位置，但不要重复敏感内容本身。
 
-## Data-handling boundary
+## 数据处理边界
 
-OpenLawKit is designed for local processing. The project does not require uploading documents to a hosted service. Users remain responsible for their model provider, agent configuration, storage, backups, and access controls.
+OpenLawKit 按本地处理设计。项目不要求把文档上传到托管服务。模型供应商、Agent 配置、存储、备份和访问控制，仍由使用者自行负责。

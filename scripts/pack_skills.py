@@ -19,10 +19,10 @@ SKIP_SUFFIXES = {".pyc", ".pyo"}
 ZIP_TIMESTAMP = (2026, 1, 1, 0, 0, 0)
 UNIX_FILE_ATTR = 0o644 << 16
 SAFETY_BOUNDARIES = (
-    "- Local-first processing; no hosted document upload is required.",
-    "- No exact deadline without a verified trigger date and matching rule.",
-    "- No silent changes to contract body text.",
-    "- All public fixtures are fictional. Outputs require human legal review.",
+    "- 本地处理；不要求把文书上传到托管服务。",
+    "- 没有已核实触发日期和匹配规则时，不给出确定期限。",
+    "- 不静默改动合同正文。",
+    "- 公开样例均为虚构。产出须经律师复核。",
 )
 
 
@@ -159,7 +159,7 @@ def write_release_notes(root: Path, output_dir: Path, version: str) -> Path:
     notes = (
         "OpenLawKit {version}\n\n"
         "{body}\n\n"
-        "## Safety boundaries\n\n"
+        "## 安全边界\n\n"
         "{safety}\n"
     ).format(
         version=version,

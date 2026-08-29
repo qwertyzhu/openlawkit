@@ -133,11 +133,11 @@ Remaining limits already listed in the compatibility table—merged or nested ta
 
 - Ask questions or show a safe demo in [Discussions](https://github.com/qwertyzhu/openlawkit/discussions).
 - Pick a scoped contribution from [`good first issue`](https://github.com/qwertyzhu/openlawkit/labels/good%20first%20issue) or from the [open issue list](https://github.com/qwertyzhu/openlawkit/issues).
-- Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing a rule or workflow change.
+- Read [CONTRIBUTING.en.md](CONTRIBUTING.en.md) before proposing a rule or workflow change.
 
 ## Security
 
-Do not put client names, case numbers, credentials, internal paths, or live matter files in a public issue. Use [private vulnerability reporting](https://github.com/qwertyzhu/openlawkit/security/advisories/new) for security or accidental-disclosure reports. See [SECURITY.md](SECURITY.md).
+Do not put client names, case numbers, credentials, internal paths, or live matter files in a public issue. Use [private vulnerability reporting](https://github.com/qwertyzhu/openlawkit/security/advisories/new) for security or accidental-disclosure reports. See [SECURITY.en.md](SECURITY.en.md).
 
 ## License
 

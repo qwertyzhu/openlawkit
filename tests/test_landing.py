@@ -164,10 +164,45 @@ def test_default_readme_is_chinese() -> None:
     assert "Run the repository demo" in english
     assert "运行仓库样例" not in english
     assert "README.md" in stub
-    assert (ROOT / "CONTRIBUTING.zh-CN.md").is_file()
-    assert (ROOT / "SECURITY.zh-CN.md").is_file()
+    assert (ROOT / "CONTRIBUTING.md").is_file()
+    assert (ROOT / "CONTRIBUTING.en.md").is_file()
+    assert (ROOT / "SECURITY.md").is_file()
+    assert (ROOT / "SECURITY.en.md").is_file()
     assert "贡献指南" in default
-    assert "CONTRIBUTING.md" in english
+    assert "CONTRIBUTING.md" in default
+    assert "CONTRIBUTING.en.md" in english
+
+
+def test_community_files_are_chinese_first() -> None:
+    contributing = (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
+    security = (ROOT / "SECURITY.md").read_text(encoding="utf-8")
+    conduct = (ROOT / "CODE_OF_CONDUCT.md").read_text(encoding="utf-8")
+    bug = (ROOT / ".github" / "ISSUE_TEMPLATE" / "bug.yml").read_text(encoding="utf-8")
+    pr = (ROOT / ".github" / "PULL_REQUEST_TEMPLATE.md").read_text(encoding="utf-8")
+    changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    assert "贡献" in contributing
+    assert "虚构" in contributing
+    assert "不要" in security
+    assert "合同" in security or "卷宗" in security
+    assert "行为准则" in conduct
+    assert "禁止" in bug
+    assert "核实" in pr or "虚构" in pr
+    assert f"## {_pyproject_version()}" in changelog
+    current = changelog.split(f"## {_pyproject_version()}", 1)[1].split("## ", 1)[0]
+    assert any("\u4e00" <= ch <= "\u9fff" for ch in current)
+
+
+def test_skill_entries_are_chinese() -> None:
+    contract = (ROOT / "skills" / "contract-comment-review" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+    deadline = (ROOT / "skills" / "legal-deadline-extractor" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+    assert "批注" in contract
+    assert "不改" in contract
+    assert "期限" in deadline
+    assert "触发" in deadline
 
 
 def test_run_demo_script_produces_documented_outputs(tmp_path: Path) -> None:
