@@ -30,6 +30,8 @@ _INSTALL_TOKENS = (
     "contract-comment-review.skill",
     "legal-deadline-extractor.skill",
     "SHA256SUMS.txt",
+    "原生批注",
+    "触发事实",
 )
 
 
@@ -123,6 +125,24 @@ def test_readme_bilingual_install_and_demo_claims() -> None:
         for skill in SKILL_PATHS:
             assert (ROOT / skill / "SKILL.md").is_file()
         assert (ROOT / "scripts" / "run_demo.py").is_file()
+
+
+def test_public_descriptions_include_chinese() -> None:
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    plugin = json.loads(
+        (ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+    assert "中国法" in pyproject
+    assert "中国法" in plugin["description"]
+    assert "原生批注" in plugin["interface"]["shortDescription"]
+    contract_meta = (
+        ROOT / "skills" / "contract-comment-review" / "agents" / "openai.yaml"
+    ).read_text(encoding="utf-8")
+    deadline_meta = (
+        ROOT / "skills" / "legal-deadline-extractor" / "agents" / "openai.yaml"
+    ).read_text(encoding="utf-8")
+    assert "原生批注" in contract_meta
+    assert "可审计中国法期限" in deadline_meta
 
 
 def test_readme_good_first_issue_claim_is_bilingual() -> None:

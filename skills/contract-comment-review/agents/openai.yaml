@@ -1,6 +1,6 @@
 interface:
   display_name: "Contract Comment Review"
-  short_description: "Review DOCX contracts with native comments only."
+  short_description: "Word 合同原生批注（不改正文）/ Review DOCX contracts with native comments only."
   brand_color: "#0B6E69"
   default_prompt: "Review this Word contract from my stated party position. Add native comments only and verify that the body text is unchanged."
 policy:
