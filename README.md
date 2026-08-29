@@ -7,6 +7,8 @@
 [![License](https://img.shields.io/github/license/qwertyzhu/openlawkit)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB)](pyproject.toml)
 
+**本地优先的中国法 Agent Skills：不改合同正文加 Word 原生批注，只按已核实触发事实计算法律期限。**
+
 **Local-first Agent Skills for PRC legal work: add native Word comments without changing contract text, and calculate legal deadlines only from verified trigger facts.**
 
 Built for lawyers and legal-AI developers using coding agents. OpenLawKit is deliberately narrow, auditable, and human-reviewable—not a general legal chatbot.

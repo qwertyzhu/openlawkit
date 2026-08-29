@@ -9,6 +9,8 @@
 
 **面向中国法律实务的本地优先 Agent Skills：在不改合同正文的前提下添加 Word 原生批注，只根据已核实的触发事实计算法律期限。**
 
+**Local-first Agent Skills for PRC legal work: add native Word comments without changing contract text, and calculate legal deadlines only from verified trigger facts.**
+
 项目服务于使用编程 Agent 的律师与法律 AI 开发者。OpenLawKit 刻意保持场景窄、过程可审计、结果可人工复核，不做万能法律聊天机器人。
 
 [运行虚构样例](#运行仓库样例) · [下载合同批注 Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/contract-comment-review.skill) · [下载期限提取 Skill](https://github.com/qwertyzhu/openlawkit/releases/latest/download/legal-deadline-extractor.skill) · [查看最新版本](https://github.com/qwertyzhu/openlawkit/releases/latest)

@@ -1,7 +1,7 @@
 {
   "name": "openlawkit",
   "version": "0.2.0",
-  "description": "Privacy-first, auditable PRC contract-review and legal-deadline workflows",
+  "description": "本地优先的中国法合同批注与法律期限工作流。Local-first, auditable PRC contract-review and legal-deadline workflows",
   "author": {
     "name": "qwertyzhu",
     "url": "https://github.com/qwertyzhu"
@@ -18,8 +18,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "OpenLawKit",
-    "shortDescription": "Auditable PRC legal workflows for local documents.",
-    "longDescription": "Review Word contracts with native comments and extract evidence-linked PRC legal deadlines without silently changing source text or guessing missing trigger dates.",
+    "shortDescription": "本地优先的中国法工作流：Word 原生批注与可审计期限。Auditable PRC legal workflows for local documents.",
+    "longDescription": "审查 Word 合同时只加原生批注、不改正文；从已核实触发事实提取中国法期限，缺事实不算死期。Review Word contracts with native comments and extract evidence-linked PRC legal deadlines without silently changing source text or guessing missing trigger dates.",
     "developerName": "qwertyzhu",
     "category": "Productivity",
     "capabilities": [
@@ -32,6 +32,8 @@
     "termsOfServiceURL": "https://github.com/qwertyzhu/openlawkit/blob/main/LICENSE",
     "brandColor": "#0B6E69",
     "defaultPrompt": [
+      "请从买方立场审查这份 Word 合同。只添加 Word 原生批注，不修改正文，并返回完整性校验报告。",
+      "请从这份文书提取可审计的法律期限，保留每个触发事实的原文和位置。缺少送达日期时输出 needs_confirmation，不要猜测。",
       "Review this Word contract with native comments only.",
       "Extract and audit legal deadlines from this document."
     ]
