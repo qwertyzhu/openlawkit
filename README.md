@@ -127,8 +127,10 @@ The exact included and excluded deadline rules, with official sources, are in th
 
 The next useful milestones are broader real-world fixture coverage, verified cross-platform onboarding, safe rule contributions, and support for additional Word structures without weakening text-integrity checks.
 
+Remaining limits already listed in the compatibility table—merged or nested table anchors, headers and footers, and non-2026 calendars—are tracked as [open issues](https://github.com/qwertyzhu/openlawkit/issues). They are not shipped capabilities.
+
 - Ask questions or show a safe demo in [Discussions](https://github.com/qwertyzhu/openlawkit/discussions).
-- Pick a scoped contribution from [`good first issue`](https://github.com/qwertyzhu/openlawkit/labels/good%20first%20issue).
+- Pick a scoped contribution from [`good first issue`](https://github.com/qwertyzhu/openlawkit/labels/good%20first%20issue) or from the [open issue list](https://github.com/qwertyzhu/openlawkit/issues).
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing a rule or workflow change.
 
 ## Security

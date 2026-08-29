@@ -8,6 +8,9 @@ are year-scoped files. A software patch must not silently expand legal rules.
 
 ## Unreleased
 
+- Keep the bilingual landing pages honest about remaining Word/calendar limits and the contributor issue list.
+- Add regression tests for public version alignment, README install/demo paths, and the documented `run_demo.py` outputs.
+
 ## 0.2.0 - 2026-08-27
 
 Minor release: simple Word table-cell comment anchors and documented fresh-clone

@@ -127,8 +127,10 @@ flowchart LR
 
 下一阶段最有价值的工作，是扩大真实结构的虚构回归样例、持续验证跨平台上手流程、建立安全的规则贡献方式，并在不削弱正文完整性校验的前提下支持更多 Word 结构。
 
+兼容性表里已经写明、但仍未交付的限制——合并/嵌套表格锚点、页眉页脚、非 2026 年日历——以 [open issue](https://github.com/qwertyzhu/openlawkit/issues) 跟踪，不是已经交付的能力。
+
 - 使用问题、想法和安全演示请发到 [Discussions](https://github.com/qwertyzhu/openlawkit/discussions)；
-- 从 [`good first issue`](https://github.com/qwertyzhu/openlawkit/labels/good%20first%20issue) 选择边界清楚的贡献；
+- 从 [`good first issue`](https://github.com/qwertyzhu/openlawkit/labels/good%20first%20issue) 或 [open issue 列表](https://github.com/qwertyzhu/openlawkit/issues) 选择边界清楚的贡献；
 - 提交规则或工作流前，请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 安全
