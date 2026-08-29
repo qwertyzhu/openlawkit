@@ -161,11 +161,14 @@ def test_pack_skills_builds_reproducible_runtime_archives(tmp_path: Path) -> Non
         assert not any("/evals/" in member or member.endswith(".pyc") for member in members)
         assert any(member.startswith(f"{archive.stem}/scripts/") for member in members)
         assert any(member.startswith(f"{archive.stem}/agents/") for member in members)
+        if archive.stem == "legal-deadline-extractor":
+            assert f"{archive.stem}/references/holidays-cn-2025.json" in members
+            assert f"{archive.stem}/references/holidays-cn-2026.json" in members
 
     notes = (first / "RELEASE_NOTES.md").read_text(encoding="utf-8")
     assert notes.startswith(f"OpenLawKit {_pyproject_version()}")
     assert f"## {_pyproject_version()}" in notes
-    assert "simple Word table-cell comment anchors" in notes
+    assert "does not expand the v0.1 legal rule pack" in notes
     assert "No silent changes to contract body text." in notes
 
 
@@ -272,7 +275,7 @@ def test_changelog_section_matches_dated_headings() -> None:
         _pyproject_version(),
     )
     assert body.startswith(f"## {_pyproject_version()}")
-    assert "simple Word table-cell comment anchors" in body
+    assert "does not expand the v0.1 legal rule pack" in body
 
 
 def test_pack_skills_project_version_matches_pyproject() -> None:

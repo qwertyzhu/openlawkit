@@ -120,7 +120,7 @@ See [Architecture](docs/architecture.md) for the trust boundaries and validation
 | Word review | `.docx` main-body paragraph anchors and simple (non-merged, non-nested) body-table cell anchors; visually opened in Microsoft Word for Windows |
 | Unsupported Word comment anchors | Merged/nested/ambiguous tables, headers/footers, text boxes, hyperlinks/fields, revision containers, and overlapping anchors are rejected; text inside body tables is still covered by integrity verification |
 | Deadline rules | The events explicitly listed in the PRC labor-arbitration and civil-enforcement v0.1 rule pack |
-| Calendar | The included official 2026 PRC holiday-adjustment calendar; other years require another verified calendar |
+| Calendar | The included official 2025 and 2026 PRC holiday-adjustment calendars; other years require another verified calendar |
 | Legal judgment | Human review is always required; structural verification is not proof that legal advice is correct |
 
 The exact included and excluded deadline rules, with official sources, are in the [v0.1 rule-scope note](docs/rule-scope.zh-CN.md).
@@ -129,7 +129,7 @@ The exact included and excluded deadline rules, with official sources, are in th
 
 The next useful milestones are broader real-world fixture coverage, verified cross-platform onboarding, safe rule contributions, and support for additional Word structures without weakening text-integrity checks.
 
-Remaining limits already listed in the compatibility table—merged or nested table anchors, headers and footers, and non-2026 calendars—are tracked as [open issues](https://github.com/qwertyzhu/openlawkit/issues). They are not shipped capabilities.
+Remaining limits already listed in the compatibility table—merged or nested table anchors, headers and footers, and calendars other than 2025/2026—are tracked as [open issues](https://github.com/qwertyzhu/openlawkit/issues). They are not shipped capabilities.
 
 - Ask questions or show a safe demo in [Discussions](https://github.com/qwertyzhu/openlawkit/discussions).
 - Pick a scoped contribution from [`good first issue`](https://github.com/qwertyzhu/openlawkit/labels/good%20first%20issue) or from the [open issue list](https://github.com/qwertyzhu/openlawkit/issues).

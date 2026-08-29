@@ -289,6 +289,38 @@ class ContractCommentReviewTests(unittest.TestCase):
         self.assertIn("nested tables are unsupported", result.stderr)
         self.assertFalse(output.exists())
 
+    def test_header_anchor_is_refused_by_name(self) -> None:
+        source = self.work / "header-only.docx"
+        document = Document()
+        document.add_paragraph("Fictional body preamble")
+        document.sections[0].header.paragraphs[0].text = "HEADER ONLY FICTIONAL TERM"
+        document.save(source)
+        findings = self.work / "header-findings.json"
+        findings.write_text(
+            json.dumps(
+                {
+                    "language": "en",
+                    "findings": [
+                        {
+                            "finding_id": "HEADER-1",
+                            "paragraph_text": "HEADER ONLY FICTIONAL TERM",
+                            "anchor_text": "HEADER ONLY FICTIONAL TERM",
+                            "risk": "Medium",
+                            "issue_type": "Header term",
+                            "risk_reason": "Header text is not an allowed comment location.",
+                            "revision_suggestion": "Move the term into the body before commenting.",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        output = self.work / "must-not-exist-header.docx"
+        result = run_cli(ADD_COMMENTS, source, findings, "-o", output)
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertIn("header/footer comment anchors are unsupported", result.stderr)
+        self.assertFalse(output.exists())
+
     def test_verifier_detects_table_text_tampering(self) -> None:
         source = self.work / "table-input.docx"
         document = Document()

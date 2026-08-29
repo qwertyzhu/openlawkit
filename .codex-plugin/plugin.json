@@ -1,6 +1,6 @@
 {
   "name": "openlawkit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "本地优先的中国法合同批注与法律期限工作流。Local-first, auditable PRC contract-review and legal-deadline workflows",
   "author": {
     "name": "qwertyzhu",

@@ -87,6 +87,7 @@ _LOCATION_ERRORS = {
     _LOCATION_MERGED_TABLE: "merged table cells are unsupported",
     _LOCATION_AMBIGUOUS_TABLE: "ambiguous table cell content is unsupported",
     _LOCATION_UNSUPPORTED: "anchors in this Word structure are unsupported",
+    "header-footer": "header/footer comment anchors are unsupported",
 }
 
 
@@ -142,13 +143,37 @@ def comment_anchor_paragraphs(document_root: etree._Element) -> list[etree._Elem
     ]
 
 
-def _unsupported_paragraph_error(finding_id: str, needle: str, document_root: etree._Element) -> str:
+def header_footer_paragraph_texts(package: zipfile.ZipFile) -> list[str]:
+    """Return paragraph texts from Word header and footer parts only."""
+    texts: list[str] = []
+    for name in package.namelist():
+        posix = name.replace("\\", "/")
+        if not posix.lower().startswith("word/"):
+            continue
+        base = posix.rsplit("/", 1)[-1].lower()
+        if not base.endswith(".xml"):
+            continue
+        if not (base.startswith("header") or base.startswith("footer")):
+            continue
+        root = _parse_xml(package.read(name), name)
+        texts.extend(paragraph_text(paragraph) for paragraph in root.xpath(".//w:p", namespaces=NS))
+    return texts
+
+
+def _unsupported_paragraph_error(
+    finding_id: str,
+    needle: str,
+    document_root: etree._Element,
+    header_footer_texts: list[str] | tuple[str, ...] = (),
+) -> str:
     for paragraph in document_root.xpath("/w:document/w:body//w:p", namespaces=NS):
         if paragraph_text(paragraph) != needle:
             continue
         kind = classify_anchor_paragraph(paragraph)
         if kind != _LOCATION_SUPPORTED:
             return f"{finding_id}: {_LOCATION_ERRORS[kind]}"
+    if needle in header_footer_texts:
+        return f"{finding_id}: {_LOCATION_ERRORS['header-footer']}"
     return f"{finding_id}: paragraph_text not found"
 
 
@@ -286,6 +311,7 @@ def _plan_comments(
     document_root: etree._Element,
     findings: list[dict[str, Any]],
     first_comment_id: int,
+    header_footer_texts: list[str] | tuple[str, ...] = (),
 ) -> list[PlannedComment]:
     paragraphs = comment_anchor_paragraphs(document_root)
     paragraph_strings = [paragraph_text(p) for p in paragraphs]
@@ -300,7 +326,12 @@ def _plan_comments(
         ]
         if not p_matches:
             raise CommentWriterError(
-                _unsupported_paragraph_error(finding_id, finding["paragraph_text"], document_root)
+                _unsupported_paragraph_error(
+                    finding_id,
+                    finding["paragraph_text"],
+                    document_root,
+                    header_footer_texts,
+                )
             )
         p_number, paragraph = _select_occurrence(
             p_matches,
@@ -641,13 +672,16 @@ def add_comments(
                     raise CommentWriterError("word/comments.xml has an unexpected root element")
             else:
                 comments_root = etree.Element(_qn("comments"), nsmap={"w": W_NS})
+            header_footer_texts = header_footer_paragraph_texts(package)
     except (OSError, zipfile.BadZipFile) as exc:
         raise CommentWriterError(f"cannot open input DOCX: {exc}") from exc
 
     before_text = canonical_body_text(document_root)
     existing_ids = _existing_comment_ids(comments_root)
     first_comment_id = max(existing_ids, default=-1) + 1
-    plans = _plan_comments(document_root, findings, first_comment_id)
+    plans = _plan_comments(
+        document_root, findings, first_comment_id, header_footer_texts
+    )
 
     for plan in sorted(
         plans, key=lambda item: (item.paragraph_number, item.start), reverse=True
